@@ -4,7 +4,7 @@ import axios from "axios";
 import { useGoogleLogin } from "@react-oauth/google";
 import auth from "../../../../utils/auth";
 import SignUpImage from "../../../../src/assets/google.svg";
-import Logo from "../../../../src/assets/ziplugs-04.png";
+// import Logo from "../../../../src/assets/ziplugs-04.png";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -154,7 +154,7 @@ const Login = () => {
       {/* Top blue logo section */}
       <div className="flex-1 flex items-center justify-center">
         <img
-          src={Logo}
+          src="../../../assets/Ziplugs-04.png"
           alt="Ziplugs Logo"
           className="w-[250px] h-auto transform transition-all duration-1000 ease-out animate-fade-in-up"
         />
