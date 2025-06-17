@@ -4,7 +4,6 @@ import axios from "axios";
 import { useGoogleLogin } from "@react-oauth/google";
 import auth from "../../../../utils/auth";
 import SignUpImage from "../../../../src/assets/google.svg";
-// import Logo from "../../../../src/assets/ziplugs-04.png";
 
 const Login = () => {
   const navigate = useNavigate();
