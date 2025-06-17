@@ -1,0 +1,7 @@
+node_modules
+dist
+helper/key.env
+helper/Mapbox.env
+
+.trunk
+.github
