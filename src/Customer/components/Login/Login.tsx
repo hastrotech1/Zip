@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useGoogleLogin } from "@react-oauth/google";
 import auth from "../../../../utils/auth";
+import ziplugsLogo from "../../../../src/assets/Ziplugs-04.png";
+import { Button } from "../../../components/ui/button";
+import { Loader2 } from "lucide-react";
 import SignUpImage from "../../../../src/assets/google.svg";
 
 const Login = () => {
@@ -148,60 +151,139 @@ const Login = () => {
     flow: "implicit",
   });
 
+  // return (
+  //   <div className="min-h-screen bg-[#00187A] flex flex-col justify-between">
+  //     {/* Top blue logo section */}
+  //     <div className="flex-1 flex items-center justify-center">
+  //       <img
+  //         src="../../../assets/Ziplugs-04.png"
+  //         alt="Ziplugs Logo"
+  //         className="w-[250px] h-auto transform transition-all duration-1000 ease-out animate-fade-in-up"
+  //       />
+  //     </div>
+
+  //     {/* Bottom white section */}
+  //     <div className="h-1/2 w-full bg-white rounded-t-3xl p-6 shadow-lg">
+  //       <h2 className="text-xl font-semibold text-center">Welcome!</h2>
+  //       <p className="text-sm text-gray-600 text-center mt-2">
+  //         Experience seamless, fast, and reliable shipping with an account
+  //         tailored to your logistics needs
+  //       </p>
+
+  //       <button
+  //         className="flex items-center justify-center mt-6 w-full border border-black rounded-full py-3 hover:shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed"
+  //         onClick={() => loginWithGoogle()}
+  //         disabled={isLoading}
+  //       >
+  //         {isLoading ? (
+  //           <>
+  //             <div className="w-5 h-5 mr-2 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin"></div>
+  //             Signing in...
+  //           </>
+  //         ) : (
+  //           <>
+  //             <img src={SignUpImage} alt="Google" className="w-5 h-5 mr-2" />
+  //             Sign up with Google
+  //           </>
+  //         )}
+  //       </button>
+
+  //       {errorMessage && (
+  //         <div className="text-red-500 text-sm text-center mt-3 p-2 bg-red-50 rounded-md">
+  //           {errorMessage}
+  //         </div>
+  //       )}
+
+  //       <p className="text-xs text-gray-500 text-center mt-6">
+  //         By continuing, you agree to our{" "}
+  //         <a href="#" className="text-blue-600 underline">
+  //           Terms of Service
+  //         </a>{" "}
+  //         and{" "}
+  //         <a href="#" className="text-blue-600 underline">
+  //           Privacy Policy
+  //         </a>
+  //         .
+  //       </p>
+  //     </div>
+  //   </div>
+  // );
+
   return (
-    <div className="min-h-screen bg-[#00187A] flex flex-col justify-between">
+    <div className="min-h-screen bg-[#00187A] flex flex-col">
       {/* Top blue logo section */}
-      <div className="flex-1 flex items-center justify-center">
-        <img
-          src="../../../assets/Ziplugs-04.png"
-          alt="Ziplugs Logo"
-          className="w-[250px] h-auto transform transition-all duration-1000 ease-out animate-fade-in-up"
-        />
+      <div className="flex-1 flex items-center justify-center px-6 py-12">
+        <div className="text-center space-y-4">
+          <img
+            src={ziplugsLogo}
+            alt="Ziplugs Logo"
+            className="w-[280px] h-auto mx-auto transform transition-all duration-1000 ease-out animate-fade-in-up"
+          />
+          <div className="animate-scale-in">
+            <p className="text-white/90 text-lg font-medium">
+              Seamless Shipping Solutions
+            </p>
+            <p className="text-white/70 text-sm mt-1">
+              Fast • Reliable • Global
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Bottom white section */}
-      <div className="h-1/2 w-full bg-white rounded-t-3xl p-6 shadow-lg">
-        <h2 className="text-xl font-semibold text-center">Welcome!</h2>
-        <p className="text-sm text-gray-600 text-center mt-2">
-          Experience seamless, fast, and reliable shipping with an account
-          tailored to your logistics needs
-        </p>
-
-        <button
-          className="flex items-center justify-center mt-6 w-full border border-black rounded-full py-3 hover:shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed"
-          onClick={() => loginWithGoogle()}
-          disabled={isLoading}
-        >
-          {isLoading ? (
-            <>
-              <div className="w-5 h-5 mr-2 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin"></div>
-              Signing in...
-            </>
-          ) : (
-            <>
-              <img src={SignUpImage} alt="Google" className="w-5 h-5 mr-2" />
-              Sign up with Google
-            </>
-          )}
-        </button>
-
-        {errorMessage && (
-          <div className="text-red-500 text-sm text-center mt-3 p-2 bg-red-50 rounded-md">
-            {errorMessage}
+      <div className="bg-white rounded-t-[2rem] px-6 py-8 shadow-card-elegant animate-scale-in">
+        <div className="max-w-sm mx-auto space-y-6">
+          <div className="text-center space-y-3">
+            <h2 className="text-2xl font-bold text-foreground">Welcome!</h2>
+            <p className="text-black leading-relaxed">
+              Experience seamless, fast, and reliable shipping with an account
+              tailored to your logistics needs
+            </p>
           </div>
-        )}
 
-        <p className="text-xs text-gray-500 text-center mt-6">
-          By continuing, you agree to our{" "}
-          <a href="#" className="text-blue-600 underline">
-            Terms of Service
-          </a>{" "}
-          and{" "}
-          <a href="#" className="text-blue-600 underline">
-            Privacy Policy
-          </a>
-          .
-        </p>
+          <Button
+            size="lg"
+            onClick={() => loginWithGoogle()}
+            disabled={isLoading}
+            className="w-full text-black border border-grey rounded-full bg-transparent py-4 font-medium hover:text-white hover:border-transparent hover:bg-[#00187A]"
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                Signing in...
+              </>
+            ) : (
+              <>
+                <img src={SignUpImage} alt="Google" className="w-5 h-5" />
+                Sign up with Google
+              </>
+            )}
+          </Button>
+
+          {errorMessage && (
+            <div className="text-destructive text-sm text-center p-3 bg-destructive/10 rounded-lg border border-destructive/20">
+              {errorMessage}
+            </div>
+          )}
+
+          <p className="text-xs text-muted-foreground text-center leading-relaxed">
+            By continuing, you agree to our{" "}
+            <a
+              href="#"
+              className="text-primary hover:text-primary/80 underline underline-offset-2 transition-colors"
+            >
+              Terms of Service
+            </a>{" "}
+            and{" "}
+            <a
+              href="#"
+              className="text-primary hover:text-primary/80 underline underline-offset-2 transition-colors"
+            >
+              Privacy Policy
+            </a>
+            .
+          </p>
+        </div>
       </div>
     </div>
   );

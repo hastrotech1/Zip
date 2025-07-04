@@ -1,184 +1,3 @@
-// import React, { useEffect, useState } from "react";
-// import ProfileHeader from "../ProfileHeader/ProfileHeader";
-// import SideBar from "../sideNav/SideBar";
-// import MobileHeader from "../MobileHeader/MobileHeader";
-// import { Bell } from "lucide-react";
-// import {
-//   Card,
-//   CardContent,
-//   CardDescription,
-//   CardHeader,
-//   CardTitle,
-// } from "@/components/ui/card";
-// import { ScrollArea } from "@/components/ui/scroll-area";
-// import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-// import {
-//   Tooltip,
-//   TooltipContent,
-//   TooltipProvider,
-//   TooltipTrigger,
-// } from "@/components/ui/tooltip";
-// import { Badge } from "@/components/ui/badge";
-// import { Button } from "@/components/ui/button";
-// import { Skeleton } from "@/components/ui/skeleton";
-
-// // Notification data interface
-// interface Notification {
-//   id: string;
-//   orderID: string;
-//   title: string;
-//   description: string;
-//   date: string;
-// }
-
-// const NotificationCard: React.FC<{ notification: Notification }> = ({
-//   notification,
-// }) => (
-//   <Card>
-//     <CardHeader className="space-y-1 pb-2">
-//       <div className="flex items-start justify-between">
-//         <CardTitle className="text-lg font-semibold">
-//           {notification.title}
-//         </CardTitle>
-//         <TooltipProvider>
-//           <Tooltip>
-//             <TooltipTrigger>
-//               <Badge variant="secondary" className="ml-2">
-//                 {new Date(notification.date).toLocaleDateString()}
-//               </Badge>
-//             </TooltipTrigger>
-//             <TooltipContent>
-//               {new Date(notification.date).toLocaleString()}
-//             </TooltipContent>
-//           </Tooltip>
-//         </TooltipProvider>
-//       </div>
-//       <CardDescription>
-//         <Button variant="link" className="p-0 h-auto font-normal" asChild>
-//           <a href={`/orders/${notification.orderID}`}>
-//             Order ID: {notification.orderID}
-//           </a>
-//         </Button>
-//       </CardDescription>
-//     </CardHeader>
-//     <CardContent>
-//       <p className="text-sm text-muted-foreground">
-//         {notification.description}
-//       </p>
-//     </CardContent>
-//   </Card>
-// );
-
-// const NotificationsSkeleton: React.FC = () => (
-//   <div className="space-y-4">
-//     {[1, 2, 3].map((i) => (
-//       <Card key={i}>
-//         <CardHeader className="space-y-1 pb-2">
-//           <div className="flex items-start justify-between">
-//             <Skeleton className="h-5 w-1/3" />
-//             <Skeleton className="h-5 w-20" />
-//           </div>
-//           <Skeleton className="h-4 w-1/4" />
-//         </CardHeader>
-//         <CardContent>
-//           <Skeleton className="h-4 w-full" />
-//         </CardContent>
-//       </Card>
-//     ))}
-//   </div>
-// );
-
-// const Notifications: React.FC = () => {
-//   const [notifications, setNotifications] = useState<Notification[]>([]);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState<string | null>(null);
-
-//   useEffect(() => {
-//     const fetchNotifications = async () => {
-//       try {
-//         setLoading(true);
-//         const response = await fetch("/api/notifications");
-//         if (!response.ok) throw new Error("Failed to fetch notifications");
-//         const data: Notification[] = await response.json();
-//         setNotifications(data);
-//         setError(null);
-//       } catch (error) {
-//         setError("Failed to load notifications. Please try again later.");
-//         console.error("Error fetching notifications:", error);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchNotifications();
-//   }, []);
-
-//   return (
-//     <section className="md:flex min-h-screen bg-background">
-//       {/* Sidebar */}
-//       <div className="fixed hidden md:block">
-//         <SideBar />
-//       </div>
-
-//       {/* Main Content */}
-//       <main className="flex-1 w-full md:px-8 md:py-5 md:ml-64">
-//         <div className="hidden md:block">
-//           <ProfileHeader
-//             content={
-//               <div className="flex items-center gap-2 text-2xl font-bold">
-//                 <Bell className="h-6 w-6" />
-//                 Notifications
-//               </div>
-//             }
-//             profilePic="#"
-//           />
-//         </div>
-//         <div className="md:hidden">
-//           <MobileHeader />
-//         </div>
-
-//         <div className="p-6">
-//           <div className="md:hidden mb-6">
-//             <h1 className="text-2xl font-bold flex items-center gap-2">
-//               <Bell className="h-6 w-6" />
-//               Notifications
-//             </h1>
-//           </div>
-
-//           <ScrollArea className="h-[calc(100vh-12rem)]">
-//             {loading ? (
-//               <NotificationsSkeleton />
-//             ) : error ? (
-//               <Alert variant="destructive">
-//                 <AlertTitle>Error</AlertTitle>
-//                 <AlertDescription>{error}</AlertDescription>
-//               </Alert>
-//             ) : notifications.length > 0 ? (
-//               <div className="space-y-4">
-//                 {notifications.map((notification) => (
-//                   <NotificationCard
-//                     key={notification.id}
-//                     notification={notification}
-//                   />
-//                 ))}
-//               </div>
-//             ) : (
-//               <Alert>
-//                 <AlertTitle>No notifications</AlertTitle>
-//                 <AlertDescription>
-//                   You don't have any notifications at the moment.
-//                 </AlertDescription>
-//               </Alert>
-//             )}
-//           </ScrollArea>
-//         </div>
-//       </main>
-//     </section>
-//   );
-// };
-
-// export default Notifications;
-
 import React, { useEffect, useState } from "react";
 import ProfileHeader from "../ProfileHeader/ProfileHeader";
 import SideBar from "../sideNav/SideBar";
@@ -363,6 +182,9 @@ const Notifications: React.FC = () => {
       <div className="fixed hidden md:block z-10">
         <SideBar />
       </div>
+      <div className="md:hidden mb-20">
+        <MobileHeader />
+      </div>
 
       {/* Main Content */}
       <main className="flex-1 w-full md:ml-64">
@@ -390,12 +212,6 @@ const Notifications: React.FC = () => {
             profilePic="#"
           />
         </div>
-
-        {/* Mobile Header */}
-        <div className="md:hidden">
-          <MobileHeader />
-        </div>
-
         {/* Content */}
         <div className="px-4 md:px-8 pb-6">
           {/* Mobile Title */}

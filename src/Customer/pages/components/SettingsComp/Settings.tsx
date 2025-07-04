@@ -256,6 +256,9 @@ const Settings = () => {
       <div className="hidden md:block">
         <SideBar />
       </div>
+      <div className="md:hidden">
+        <MobileHeader />
+      </div>
 
       <main className="flex-1">
         <div className="hidden md:block p-4 lg:p-8">
@@ -268,10 +271,6 @@ const Settings = () => {
             }
             profilePic={currentProfilePicture}
           />
-        </div>
-
-        <div className="md:hidden">
-          <MobileHeader />
         </div>
 
         <div className="p-4 md:p-6 lg:p-8">

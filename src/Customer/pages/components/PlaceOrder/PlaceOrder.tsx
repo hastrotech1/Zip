@@ -141,8 +141,6 @@ export default function PlaceOrderPage() {
       {/* bottom sheet */}
       <div className="absolute bottom-0 w-full z-10 bg-white rounded-t-3xl shadow-2xl max-h-[70vh] overflow-y-auto touch-auto">
         <div className="p-4 space-y-4">
-          <div className="w-10 h-1 bg-gray-300 rounded-full mx-auto" />
-
           {view === "form" && (
             <>
               {/* VEHICLES */}
@@ -239,24 +237,36 @@ export default function PlaceOrderPage() {
 
           {/* DRIVERS list */}
           {view === "drivers" && (
-            <>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-4"
+            >
               <Header
                 title="Available drivers"
                 onBack={() => setView("form")}
               />
               {loadingDrivers && (
-                <p className="text-center text-sm text-gray-500">
-                  Loading drivers…
-                </p>
+                <div className="text-center py-8">
+                  <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary mb-2" />
+                  <p className="text-sm text-muted-foreground">
+                    Finding the best drivers for you...
+                  </p>
+                </div>
               )}
-              {drivers.map((d) => (
-                <DriverRow
-                  key={d.id}
-                  d={d}
-                  onSelect={() => onSelectDriver(d)}
-                />
-              ))}
-            </>
+              <div className="space-y-3">
+                {drivers.map((d, index) => (
+                  <motion.div
+                    key={d.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                  >
+                    <DriverRow d={d} onSelect={() => onSelectDriver(d)} />
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
           )}
 
           {/* SELECTED driver */}
@@ -314,19 +324,34 @@ export default function PlaceOrderPage() {
 /* ----------------------------------------------------------------- */
 function Header({ title, onBack }: { title: string; onBack: () => void }) {
   return (
-    <div className="flex justify-between items-center mb-4">
-      <button
-        onClick={onBack}
-        className="flex items-center gap-1 text-gray-600"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        Back
-      </button>
-      <h2 className="font-bold text-lg">{title}</h2>
-      <button onClick={onBack} className="text-red-600 flex items-center gap-1">
-        <X className="w-4 h-4" />
-        Cancel
-      </button>
+    <div className="sticky top-0 pt-3 z-10 bg-white border-b border-border">
+      {/* Top divider bar inside the sticky container */}
+      <div className="w-10 h-1 bg-gray-300 rounded-full mx-auto" />
+
+      {/* Header content */}
+      <div className="flex justify-between items-center pb-4">
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={onBack}
+          className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors px-3 py-2 rounded-xl bg-muted/50"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span className="text-sm font-medium">Back</span>
+        </motion.button>
+
+        <h2 className="font-bold text-xl text-foreground">{title}</h2>
+
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={onBack}
+          className="flex items-center gap-2 text-destructive hover:text-destructive/80 transition-colors p-2 rounded-xl bg-destructive/10"
+        >
+          <X className="w-5 h-5" />
+          <span className="text-sm font-medium">Close</span>
+        </motion.button>
+      </div>
     </div>
   );
 }
