@@ -134,7 +134,7 @@ export default function PlaceOrderPage() {
     !!fare &&
     (receiverSelf || isValidNGPhone(receiverPhone || ""));
   return (
-    <div className="relative h-screen w-full overflow-hidden bg-gray-100">
+    <div className="relative h-screen w-full overflow-hidden bg-gray-100 max-auto">
       <div ref={mapWrap} className="absolute inset-0 z-0" />
       <MobileHeader />
 

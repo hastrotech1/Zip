@@ -151,66 +151,8 @@ const Login = () => {
     flow: "implicit",
   });
 
-  // return (
-  //   <div className="min-h-screen bg-[#00187A] flex flex-col justify-between">
-  //     {/* Top blue logo section */}
-  //     <div className="flex-1 flex items-center justify-center">
-  //       <img
-  //         src="../../../assets/Ziplugs-04.png"
-  //         alt="Ziplugs Logo"
-  //         className="w-[250px] h-auto transform transition-all duration-1000 ease-out animate-fade-in-up"
-  //       />
-  //     </div>
-
-  //     {/* Bottom white section */}
-  //     <div className="h-1/2 w-full bg-white rounded-t-3xl p-6 shadow-lg">
-  //       <h2 className="text-xl font-semibold text-center">Welcome!</h2>
-  //       <p className="text-sm text-gray-600 text-center mt-2">
-  //         Experience seamless, fast, and reliable shipping with an account
-  //         tailored to your logistics needs
-  //       </p>
-
-  //       <button
-  //         className="flex items-center justify-center mt-6 w-full border border-black rounded-full py-3 hover:shadow-md transition disabled:opacity-50 disabled:cursor-not-allowed"
-  //         onClick={() => loginWithGoogle()}
-  //         disabled={isLoading}
-  //       >
-  //         {isLoading ? (
-  //           <>
-  //             <div className="w-5 h-5 mr-2 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin"></div>
-  //             Signing in...
-  //           </>
-  //         ) : (
-  //           <>
-  //             <img src={SignUpImage} alt="Google" className="w-5 h-5 mr-2" />
-  //             Sign up with Google
-  //           </>
-  //         )}
-  //       </button>
-
-  //       {errorMessage && (
-  //         <div className="text-red-500 text-sm text-center mt-3 p-2 bg-red-50 rounded-md">
-  //           {errorMessage}
-  //         </div>
-  //       )}
-
-  //       <p className="text-xs text-gray-500 text-center mt-6">
-  //         By continuing, you agree to our{" "}
-  //         <a href="#" className="text-blue-600 underline">
-  //           Terms of Service
-  //         </a>{" "}
-  //         and{" "}
-  //         <a href="#" className="text-blue-600 underline">
-  //           Privacy Policy
-  //         </a>
-  //         .
-  //       </p>
-  //     </div>
-  //   </div>
-  // );
-
   return (
-    <div className="min-h-screen bg-[#00187A] flex flex-col">
+    <div className="min-h-screen bg-[#00187A] flex flex-col max-auto">
       {/* Top blue logo section */}
       <div className="flex-1 flex items-center justify-center px-6 py-12">
         <div className="text-center space-y-4">
