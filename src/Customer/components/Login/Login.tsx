@@ -41,7 +41,7 @@ const Login = () => {
       const response = await axios.post(
         "https://ziplogistics.pythonanywhere.com/api/google-user-login/customer",
         {
-          idToken: id_token,
+          id_token: idToken,
           token: accessToken,
           email: userInfo.email,
           name: userInfo.given_name,
