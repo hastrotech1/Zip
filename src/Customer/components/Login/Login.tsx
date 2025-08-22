@@ -53,7 +53,7 @@ const Login = () => {
 
       // Debug: Log each possible field from server response
       console.log("Server Response Fields:", {
-        id_token: reponse.data["idToken"]
+        id_token: reponse.data["idToken"],
         "access-token": response.data["access-token"],
         access_token: response.data["access_token"],
         accessToken: response.data["accessToken"],
