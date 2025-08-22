@@ -38,11 +38,11 @@ const Login = () => {
       // const userInfo = userInfoResponse.data;
       // console.log("Google User Info:", userInfo);
 
-      const authorizationCode = codeResponse.code;
+      const authorizationCode = tokenResponse.code;
       console.log("Google Authorization Code:", authorizationCode);
       
       // Exchange authorization code for tokens (including ID token)
-      const tokenResponse = await axios.post(
+      const tokenExchangeResponse = await axios.post(
         "https://oauth2.googleapis.com/token",
         {
           code: authorizationCode,
@@ -57,7 +57,7 @@ const Login = () => {
         }
       );
       
-      const tokens = tokenResponse.data;
+      const tokens = tokenExchangeResponse.data;
       const accessToken = tokens.access_token;
       const idToken = tokens.id_token; 
       const refreshToken = tokens.refresh_token;
