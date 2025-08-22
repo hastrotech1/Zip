@@ -13,78 +13,32 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleGoogleSignIn = async (tokenResponse: any) => {
+  const handleGoogleSignIn = async (tokenResponse: {
+    access_token: string;
+  }) => {
     try {
       setIsLoading(true);
       setErrorMessage(""); // Clear any previous errors
 
-      // const accessToken = tokenResponse.access_token;
-      // // const idToken = tokenResponse.id_token;
-      // console.log("Google Access Token:", accessToken);
-      // // console.log("Google ID Token:", idToken);
+      const accessToken = tokenResponse.access_token;
+      console.log("Google Access Token:", accessToken);
 
-      // const userInfoResponse = await axios.get(
-      //   `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${accessToken}`,
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${accessToken}`,
-      //       Accept: "application/json",
-      //     },
-      //   }
-      // );
-
-      // const userInfo = userInfoResponse.data;
-      // console.log("Google User Info:", userInfo);
-
-      const authorizationCode = tokenResponse.code;
-      console.log("Google Authorization Code:", authorizationCode);
-      console.log("ID TOKEN:", tokenResponse.id_token);
-      
-      // Exchange authorization code for tokens (including ID token)
-      const tokenExchangeResponse = await axios.post(
-        "https://oauth2.googleapis.com/token",
-        {
-          code: authorizationCode,
-          client_id: "180625905651-os34vuh7ll8pfuvq5ropkgfm645mt7bn.apps.googleusercontent.com",
-          client_secret: "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",
-          redirect_uri: window.location.origin,
-          grant_type: "authorization_code",
-        },
+      const userInfoResponse = await axios.get(
+        `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${accessToken}`,
         {
           headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
+            Authorization: `Bearer ${accessToken}`,
+            Accept: "application/json",
           },
         }
       );
-      
-      const tokens = tokenExchangeResponse.data;
-      const accessToken = tokens.access_token;
-      const idToken = tokens.id_token; 
-      const refreshToken = tokens.refresh_token;
-      
-      console.log("Google Access Token:", accessToken);
-      console.log("Google ID Token:", idToken);
-      console.log("Google Refresh Token:", refreshToken);
-      
-      // Decode ID token to get user info
-      const decodedIdToken = decodeIdToken(idToken);
-      console.log("Decoded ID Token:", decodedIdToken);
-      
-      // Extract user info from ID token
-      const userInfo = {
-        email: decodedIdToken.email,
-        name: decodedIdToken.name,
-        given_name: decodedIdToken.given_name,
-        picture: decodedIdToken.picture,
-        sub: decodedIdToken.sub,
-      };
-      
-      console.log("User Info from ID Token:", userInfo);
+
+      const userInfo = userInfoResponse.data;
+      console.log("Google User Info:", userInfo);
 
       const response = await axios.post(
         "https://ziplogistics.pythonanywhere.com/api/google-user-login/customer",
         {
-          id_token: idToken,
           token: accessToken,
           email: userInfo.email,
           name: userInfo.given_name,
@@ -96,7 +50,6 @@ const Login = () => {
 
       // Debug: Log each possible field from server response
       console.log("Server Response Fields:", {
-        id_token: response.data["idToken"],
         "access-token": response.data["access-token"],
         access_token: response.data["access_token"],
         accessToken: response.data["accessToken"],
@@ -185,23 +138,6 @@ const Login = () => {
       setIsLoading(false);
     }
   };
-      
-  const decodeIdToken = (token: string) => {
-    try {
-      const parts = token.split('.');
-      const payload = JSON.parse(atob(parts[1]));
-          
-        if (payload.exp * 1000 < Date.now()) {
-          console.warn('ID Token is expired');
-        }
-          
-        return payload;
-      } catch (error) {
-          console.error('Failed to decode ID token:', error);
-          return null;
-        }
-    };
-      
 
   const handleGoogleSignInError = (error: unknown) => {
     console.error("Google OAuth Error:", error);
@@ -212,7 +148,6 @@ const Login = () => {
   const loginWithGoogle = useGoogleLogin({
     onSuccess: handleGoogleSignIn,
     onError: handleGoogleSignInError,
-    scope: "openid email profile",
     flow: "implicit",
   });
 
