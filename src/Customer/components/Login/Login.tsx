@@ -38,6 +38,7 @@ const Login = () => {
 
       const authorizationCode = tokenResponse.code;
       console.log("Google Authorization Code:", authorizationCode);
+      console.log("ID TOKEN:", tokenResponse.id_token);
       
       // Exchange authorization code for tokens (including ID token)
       const tokenExchangeResponse = await axios.post(
