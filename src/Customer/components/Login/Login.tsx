@@ -150,6 +150,7 @@ const Login = () => {
   const loginWithGoogle = useGoogleLogin({
     onSuccess: handleGoogleSignIn,
     onError: handleGoogleSignInError,
+    scope: "openid email profile",
     flow: "implicit",
   });
 
