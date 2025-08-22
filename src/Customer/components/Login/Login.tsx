@@ -47,7 +47,7 @@ const Login = () => {
         {
           code: authorizationCode,
           client_id: "180625905651-os34vuh7ll8pfuvq5ropkgfm645mt7bn.apps.googleusercontent.com",
-          client_secret: "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"
+          client_secret: "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",
           redirect_uri: window.location.origin,
           grant_type: "authorization_code",
         },
