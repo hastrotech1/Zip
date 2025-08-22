@@ -46,7 +46,7 @@ const Login = () => {
         "https://oauth2.googleapis.com/token",
         {
           code: authorizationCode,
-          client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID, // Your Google Client ID
+          client_id: "180625905651-os34vuh7ll8pfuvq5ropkgfm645mt7bn.apps.googleusercontent.com",
           redirect_uri: window.location.origin,
           grant_type: "authorization_code",
         },
