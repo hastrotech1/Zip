@@ -13,9 +13,7 @@ const Login = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleGoogleSignIn = async (tokenResponse: {
-    code: string;
-  }) => {
+  const handleGoogleSignIn = async (tokenResponse: any) => {
     try {
       setIsLoading(true);
       setErrorMessage(""); // Clear any previous errors
@@ -214,7 +212,7 @@ const Login = () => {
     onSuccess: handleGoogleSignIn,
     onError: handleGoogleSignInError,
     scope: "openid email profile",
-    flow: "auth-code",
+    flow: "implicit",
   });
 
   return (
