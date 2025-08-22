@@ -14,30 +14,88 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleGoogleSignIn = async (tokenResponse: {
-    access_token: string, id_token?: string
+    code: string;
   }) => {
     try {
       setIsLoading(true);
       setErrorMessage(""); // Clear any previous errors
 
-      const accessToken = tokenResponse.access_token;
-      const idToken = tokenResponse.id_token;
-      console.log("Google Access Token:", accessToken);
-      console.log("Google ID Token:", idToken);
+      // const accessToken = tokenResponse.access_token;
+      // // const idToken = tokenResponse.id_token;
+      // console.log("Google Access Token:", accessToken);
+      // // console.log("Google ID Token:", idToken);
 
-      const userInfoResponse = await axios.get(
-        `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${accessToken}`,
+      // const userInfoResponse = await axios.get(
+      //   `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${accessToken}`,
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${accessToken}`,
+      //       Accept: "application/json",
+      //     },
+      //   }
+      // );
+
+      // const userInfo = userInfoResponse.data;
+      // console.log("Google User Info:", userInfo);
+
+      const authorizationCode = codeResponse.code;
+      console.log("Google Authorization Code:", authorizationCode);
+      
+      // Exchange authorization code for tokens (including ID token)
+      const tokenResponse = await axios.post(
+        "https://oauth2.googleapis.com/token",
+        {
+          code: authorizationCode,
+          client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID, // Your Google Client ID
+          redirect_uri: window.location.origin,
+          grant_type: "authorization_code",
+        },
         {
           headers: {
-            Authorization: `Bearer ${accessToken}`,
-            Accept: "application/json",
+            "Content-Type": "application/x-www-form-urlencoded",
           },
         }
       );
-
-      const userInfo = userInfoResponse.data;
-      console.log("Google User Info:", userInfo);
-
+      
+      const tokens = tokenResponse.data;
+      const accessToken = tokens.access_token;
+      const idToken = tokens.id_token; // This is the ID token
+      const refreshToken = tokens.refresh_token;
+      
+      console.log("Google Access Token:", accessToken);
+      console.log("Google ID Token:", idToken);
+      
+      // Decode ID token to get user info
+      const decodedIdToken = decodeIdToken(idToken);
+      console.log("Decoded ID Token:", decodedIdToken);
+      
+      // Extract user info from ID token
+      const userInfo = {
+        email: decodedIdToken.email,
+        name: decodedIdToken.name,
+        given_name: decodedIdToken.given_name,
+        picture: decodedIdToken.picture,
+        sub: decodedIdToken.sub, // Google user ID
+      };
+      
+      console.log("User Info from ID Token:", userInfo);
+      
+      const decodeIdToken = (token: string) => {
+        try {
+          const parts = token.split('.');
+          const payload = JSON.parse(atob(parts[1]));
+          
+          if (payload.exp * 1000 < Date.now()) {
+            console.warn('ID Token is expired');
+          }
+          
+          return payload;
+        } catch (error) {
+          console.error('Failed to decode ID token:', error);
+          return null;
+        }
+      };
+      
       const response = await axios.post(
         "https://ziplogistics.pythonanywhere.com/api/google-user-login/customer",
         {
@@ -153,7 +211,7 @@ const Login = () => {
     onSuccess: handleGoogleSignIn,
     onError: handleGoogleSignInError,
     scope: "openid email profile",
-    flow: "implicit",
+    flow: "auth-code",
   });
 
   return (
