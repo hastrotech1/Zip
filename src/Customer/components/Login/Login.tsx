@@ -14,14 +14,16 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleGoogleSignIn = async (tokenResponse: {
-    access_token: string;
+    access_token: string, id_token?: string
   }) => {
     try {
       setIsLoading(true);
       setErrorMessage(""); // Clear any previous errors
 
       const accessToken = tokenResponse.access_token;
+      const idToken = tokenResponse.id_token;
       console.log("Google Access Token:", accessToken);
+      console.log("Google ID Token:", idToken);
 
       const userInfoResponse = await axios.get(
         `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${accessToken}`,
