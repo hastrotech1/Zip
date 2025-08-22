@@ -59,11 +59,12 @@ const Login = () => {
       
       const tokens = tokenResponse.data;
       const accessToken = tokens.access_token;
-      const idToken = tokens.id_token; // This is the ID token
+      const idToken = tokens.id_token; 
       const refreshToken = tokens.refresh_token;
       
       console.log("Google Access Token:", accessToken);
       console.log("Google ID Token:", idToken);
+      console.log("Google Refresh Token:", refreshToken);
       
       // Decode ID token to get user info
       const decodedIdToken = decodeIdToken(idToken);
@@ -75,27 +76,11 @@ const Login = () => {
         name: decodedIdToken.name,
         given_name: decodedIdToken.given_name,
         picture: decodedIdToken.picture,
-        sub: decodedIdToken.sub, // Google user ID
+        sub: decodedIdToken.sub,
       };
       
       console.log("User Info from ID Token:", userInfo);
-      
-      const decodeIdToken = (token: string) => {
-        try {
-          const parts = token.split('.');
-          const payload = JSON.parse(atob(parts[1]));
-          
-          if (payload.exp * 1000 < Date.now()) {
-            console.warn('ID Token is expired');
-          }
-          
-          return payload;
-        } catch (error) {
-          console.error('Failed to decode ID token:', error);
-          return null;
-        }
-      };
-      
+
       const response = await axios.post(
         "https://ziplogistics.pythonanywhere.com/api/google-user-login/customer",
         {
@@ -200,6 +185,23 @@ const Login = () => {
       setIsLoading(false);
     }
   };
+      
+  const decodeIdToken = (token: string) => {
+    try {
+      const parts = token.split('.');
+      const payload = JSON.parse(atob(parts[1]));
+          
+        if (payload.exp * 1000 < Date.now()) {
+          console.warn('ID Token is expired');
+        }
+          
+        return payload;
+      } catch (error) {
+          console.error('Failed to decode ID token:', error);
+          return null;
+        }
+    };
+      
 
   const handleGoogleSignInError = (error: unknown) => {
     console.error("Google OAuth Error:", error);
