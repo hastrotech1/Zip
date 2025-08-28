@@ -25,7 +25,7 @@ const Login = () => {
 
         // Exchange authorization code for ID token
         const tokenResponse = await axios.post(
-          'https://oauth2.googleapis.com/token',
+          'https://www.googleapis.com/oauth2/v4/token',
           {
             code: codeResponse.code,
             client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID, // Your Google Client ID
