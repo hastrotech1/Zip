@@ -8,204 +8,64 @@ import { Button } from "../../../components/ui/button";
 import { Loader2 } from "lucide-react";
 import SignUpImage from "../../../../src/assets/google.svg";
 
-
-// const Login = () => {
-//   const navigate = useNavigate();
-//   const [errorMessage, setErrorMessage] = useState("");
-//   const [isLoading, setIsLoading] = useState(false);
-
-//   // Method 1: Get ID Token using Authorization Code Flow
-//   const loginWithGoogle = useGoogleLogin({
-//     onSuccess: async (codeResponse) => {
-//       try {
-//         setIsLoading(true);
-//         setErrorMessage("");
-
-//         console.log("Authorization Code:", codeResponse.code);
-
-//         // Exchange authorization code for ID token
-//         const tokenResponse = await axios.post(
-//           // 'https://www.googleapis.com/oauth2/v4/token'
-//           `https://oauth2.googleapis.com/token`,
-//           {
-//             code: codeResponse.code,
-//             client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
-//             client_secrete: import.meta.env.VITE_GOOGLE_CLIENT_SECRETE,
-//             redirect_uri: window.location.origin, // Your redirect URI
-//             grant_type: 'authorization_code',
-//           },
-//           {
-//             headers: {
-//               'Content-Type': 'application/x-www-form-urlencoded',
-//             },
-//           }
-//         );
-
-//         const { id_token, access_token } = tokenResponse.data;
-        
-//         console.log("ID Token:", id_token);
-//         console.log("Access Token:", access_token);
-
-//         // Decode ID token to get user info (optional - for display purposes)
-//         const payload = JSON.parse(atob(id_token.split('.')[1]));
-//         console.log("User Info from ID Token:", payload);
-
-//         // Now you can send the ID token to your backend when it's ready
-//         // For now, you can store it or use it as needed
-        
-//         // Example of what you'll send to your backend later:
-//         const backendPayload = {
-//           id_token: id_token,
-//           // Your backend will verify this token and create user session
-//         };
-        
-//         console.log("Payload for backend:", backendPayload);
-
-//         // For now, store user info locally (remove this when backend is ready)
-//         const userInfo = {
-//           id: payload.sub,
-//           email: payload.email,
-//           name: payload.name,
-//           picture: payload.picture,
-//           given_name: payload.given_name,
-//           family_name: payload.family_name,
-//         };
-
-//         // Temporary storage until backend is ready
-//         localStorage.setItem('google_id_token', id_token);
-//         localStorage.setItem('user_info', JSON.stringify(userInfo));
-
-//         navigate("/place-order");
-        
-//       } catch (error) {
-//         console.error("Error getting ID token:", error);
-//         setErrorMessage("Failed to get authentication token. Please try again.");
-//       } finally {
-//         setIsLoading(false);
-//       }
-//     },
-//     onError: (error) => {
-//       console.error("Google OAuth Error:", error);
-//       setErrorMessage("Google login failed. Please try again.");
-//       setIsLoading(false);
-//     },
-//     flow: 'auth-code', // This is key for getting authorization code
-//     scope: 'openid email profile', // Include 'openid' to get ID token
-//   });
 const Login = () => {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleGoogleSignIn = async (tokenResponse: { access_token: string, id_token?: string }) => {
-    const idToken = tokenResponse.id_token; // <-- this is what backend needs
-    console.log("ID Token:", idToken);
+  const handleGoogleLoginSuccess = async (credentialResponse: any) => {
+    const idToken = credentialResponse.credential; // <-- ID Token (JWT)
+    console.log("Google ID Token:", idToken);
+
     try {
       setIsLoading(true);
-      setErrorMessage(""); // Clear any previous errors
+      setErrorMessage("");
 
-      const accessToken = tokenResponse.access_token;
-      console.log("Google Access Token:", accessToken);
-
-      const userInfoResponse = await axios.get(
-        `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${accessToken}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            Accept: "application/json",
-          },
-        }
-      );
-
-      const userInfo = userInfoResponse.data;
-      console.log("Google User Info:", userInfo);
-
+      // Send ID token to backend
       const response = await axios.post(
         "https://ziplogistics.pythonanywhere.com/api/google-user-login/customer",
-        {
-          token: idToken,
-          email: userInfo.email,
-          name: userInfo.given_name,
-        }
+        { token: idToken }
       );
 
       console.log("Full Server Response:", response.data);
-      console.log("Response Keys:", Object.keys(response.data));
 
-      // Debug: Log each possible field from server response
-      console.log("Server Response Fields:", {
-        "access-token": response.data["access-token"],
-        access_token: response.data["access_token"],
-        accessToken: response.data["accessToken"],
-        "refresh-token": response.data["refresh-token"],
-        refresh_token: response.data["refresh_token"],
-        refreshToken: response.data["refreshToken"],
-        user_id: response.data["user_id"],
-        userId: response.data["userId"],
-        email: response.data["email"],
-        user_email: response.data["user_email"],
-        name: response.data["name"],
-        user_name: response.data["user_name"],
-        first_name: response.data["first_name"],
-        given_name: response.data["given_name"],
-        picture: response.data["picture"],
-      });
-
-      // Try to extract tokens with different possible field names
-      const accessTokenFromServer =
+      // Extract backend response fields with fallbacks
+      const accessToken =
         response.data["access-token"] ||
         response.data["access_token"] ||
         response.data["accessToken"];
 
-      const refresh_token =
+      const refreshToken =
         response.data["refresh-token"] ||
         response.data["refresh_token"] ||
         response.data["refreshToken"];
 
-      const user_id = response.data["user_id"] || response.data["userId"];
-
+      const userId = response.data["user_id"] || response.data["userId"];
       const email =
-        response.data["email"] || response.data["user_email"] || userInfo.email; // Fallback to Google user info
-
+        response.data["email"] || response.data["user_email"] || "";
       const name =
         response.data["name"] ||
         response.data["user_name"] ||
         response.data["first_name"] ||
         response.data["given_name"] ||
-        userInfo.given_name; // Fallback to Google user info
+        "";
+      const picture = response.data["picture"] || "";
 
-      const picture = response.data["picture"] || userInfo.picture; // Fallback to Google user info
+      if (!userId) throw new Error("User ID not received from server");
+      if (!accessToken) throw new Error("Access token not received from server");
 
-      console.log("Extracted Values:", {
-        accessToken: accessTokenFromServer,
-        refreshToken: refresh_token,
-        userId: user_id,
-        userMail: email,
-        firstName: name,
-        picture: picture,
-      });
-
-      if (!user_id) {
-        throw new Error("User ID not received from server");
-      }
-
-      if (!accessTokenFromServer) {
-        throw new Error("Access token not received from server");
-      }
-
-      // Store tokens with fallback values
+      // Store values in local storage via your auth helper
       auth.storeTokens(
-        accessTokenFromServer,
-        refresh_token || "", // Provide empty string if undefined
-        user_id,
-        null, // driver_id
-        email || userInfo.email, // Use Google email as fallback
-        name || userInfo.given_name, // Use Google name as fallback
-        picture || userInfo.picture // Use Google picture as fallback
+        accessToken,
+        refreshToken || "",
+        userId,
+        null, // driver_id (not available here)
+        email,
+        name,
+        picture
       );
 
-      console.log("Final stored values check:");
-      console.log({
+      console.log("Final stored values check:", {
         access_token: localStorage.getItem("access_token"),
         refresh_token: localStorage.getItem("refresh_token"),
         user_id: localStorage.getItem("user_id"),
@@ -214,26 +74,159 @@ const Login = () => {
         picture: localStorage.getItem("picture"),
       });
 
+      // Navigate to place order page
       navigate("/place-order");
     } catch (error) {
-      console.error("Google OAuth Error:", error);
+      console.error("Google Login Error:", error);
       setErrorMessage("Failed to sign in with Google. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleGoogleSignInError = (error: unknown) => {
-    console.error("Google OAuth Error:", error);
-    setErrorMessage("Google login failed. Please try again.");
-    setIsLoading(false);
-  };
 
-  const loginWithGoogle = useGoogleLogin({
-    onSuccess: handleGoogleSignIn,
-    onError: handleGoogleSignInError,
-    flow: "implicit",
-  });
+// const Login = () => {
+//   const navigate = useNavigate();
+//   const [errorMessage, setErrorMessage] = useState("");
+//   const [isLoading, setIsLoading] = useState(false);
+
+//   const handleGoogleSignIn = async (tokenResponse: { access_token: string, id_token?: string }) => {
+//     const idToken = tokenResponse.id_token; // <-- this is what backend needs
+//     console.log("ID Token:", idToken);
+//     try {
+//       setIsLoading(true);
+//       setErrorMessage(""); // Clear any previous errors
+
+//       const accessToken = tokenResponse.access_token;
+//       console.log("Google Access Token:", accessToken);
+
+//       const userInfoResponse = await axios.get(
+//         `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${accessToken}`,
+//         {
+//           headers: {
+//             Authorization: `Bearer ${accessToken}`,
+//             Accept: "application/json",
+//           },
+//         }
+//       );
+
+//       const userInfo = userInfoResponse.data;
+//       console.log("Google User Info:", userInfo);
+
+//       const response = await axios.post(
+//         "https://ziplogistics.pythonanywhere.com/api/google-user-login/customer",
+//         {
+//           token: idToken,
+//           email: userInfo.email,
+//           name: userInfo.given_name,
+//         }
+//       );
+
+//       console.log("Full Server Response:", response.data);
+//       console.log("Response Keys:", Object.keys(response.data));
+
+//       // Debug: Log each possible field from server response
+//       console.log("Server Response Fields:", {
+//         "access-token": response.data["access-token"],
+//         access_token: response.data["access_token"],
+//         accessToken: response.data["accessToken"],
+//         "refresh-token": response.data["refresh-token"],
+//         refresh_token: response.data["refresh_token"],
+//         refreshToken: response.data["refreshToken"],
+//         user_id: response.data["user_id"],
+//         userId: response.data["userId"],
+//         email: response.data["email"],
+//         user_email: response.data["user_email"],
+//         name: response.data["name"],
+//         user_name: response.data["user_name"],
+//         first_name: response.data["first_name"],
+//         given_name: response.data["given_name"],
+//         picture: response.data["picture"],
+//       });
+
+//       // Try to extract tokens with different possible field names
+//       const accessTokenFromServer =
+//         response.data["access-token"] ||
+//         response.data["access_token"] ||
+//         response.data["accessToken"];
+
+//       const refresh_token =
+//         response.data["refresh-token"] ||
+//         response.data["refresh_token"] ||
+//         response.data["refreshToken"];
+
+//       const user_id = response.data["user_id"] || response.data["userId"];
+
+//       const email =
+//         response.data["email"] || response.data["user_email"] || userInfo.email; // Fallback to Google user info
+
+//       const name =
+//         response.data["name"] ||
+//         response.data["user_name"] ||
+//         response.data["first_name"] ||
+//         response.data["given_name"] ||
+//         userInfo.given_name; // Fallback to Google user info
+
+//       const picture = response.data["picture"] || userInfo.picture; // Fallback to Google user info
+
+//       console.log("Extracted Values:", {
+//         accessToken: accessTokenFromServer,
+//         refreshToken: refresh_token,
+//         userId: user_id,
+//         userMail: email,
+//         firstName: name,
+//         picture: picture,
+//       });
+
+//       if (!user_id) {
+//         throw new Error("User ID not received from server");
+//       }
+
+//       if (!accessTokenFromServer) {
+//         throw new Error("Access token not received from server");
+//       }
+
+//       // Store tokens with fallback values
+//       auth.storeTokens(
+//         accessTokenFromServer,
+//         refresh_token || "", // Provide empty string if undefined
+//         user_id,
+//         null, // driver_id
+//         email || userInfo.email, // Use Google email as fallback
+//         name || userInfo.given_name, // Use Google name as fallback
+//         picture || userInfo.picture // Use Google picture as fallback
+//       );
+
+//       console.log("Final stored values check:");
+//       console.log({
+//         access_token: localStorage.getItem("access_token"),
+//         refresh_token: localStorage.getItem("refresh_token"),
+//         user_id: localStorage.getItem("user_id"),
+//         user_mail: localStorage.getItem("user_mail"),
+//         first_name: localStorage.getItem("first_name"),
+//         picture: localStorage.getItem("picture"),
+//       });
+
+//       navigate("/place-order");
+//     } catch (error) {
+//       console.error("Google OAuth Error:", error);
+//       setErrorMessage("Failed to sign in with Google. Please try again.");
+//     } finally {
+//       setIsLoading(false);
+//     }
+//   };
+
+//   const handleGoogleSignInError = (error: unknown) => {
+//     console.error("Google OAuth Error:", error);
+//     setErrorMessage("Google login failed. Please try again.");
+//     setIsLoading(false);
+//   };
+
+//   const loginWithGoogle = useGoogleLogin({
+//     onSuccess: handleGoogleSignIn,
+//     onError: handleGoogleSignInError,
+//     flow: "auth-code",
+//   });
 
   return (
     <div className="min-h-screen bg-[#00187A] flex flex-col max-auto">
