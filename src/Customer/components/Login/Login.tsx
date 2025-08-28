@@ -29,7 +29,6 @@ const Login = () => {
           {
             code: codeResponse.code,
             client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID, // Your Google Client ID
-            client_secret: import.meta.env.VITE_GOOGLE_CLIENT_SECRET, // Your Google Client Secret
             redirect_uri: window.location.origin, // Your redirect URI
             grant_type: 'authorization_code',
           },
