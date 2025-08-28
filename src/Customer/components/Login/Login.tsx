@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useGoogleLogin } from "@react-oauth/google";
+import { GoogleLogin } from "@react-oauth/google";
 import auth from "../../../../utils/auth";
 import ziplugsLogo from "../../../../src/assets/Ziplugs-04.png";
-import { Button } from "../../../components/ui/button";
 import { Loader2 } from "lucide-react";
-import SignUpImage from "../../../../src/assets/google.svg";
+// import SignUpImage from "../../../../src/assets/google.svg";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -90,11 +89,11 @@ const Login = () => {
     setIsLoading(false);
   };
 
-  const loginWithGoogle = useGoogleLogin({
-    onSuccess: handleGoogleLoginSuccess,
-    onError: handleGoogleLoginError,
-    flow: "auth-code",
-  });
+  // const loginWithGoogle = useGoogleLogin({
+  //   onSuccess: handleGoogleLoginSuccess,
+  //   onError: handleGoogleLoginError,
+  //   flow: "auth-code",
+  // });
 
 
 // const Login = () => {
@@ -272,24 +271,24 @@ const Login = () => {
             </p>
           </div>
 
-          <Button
-            size="lg"
-            onClick={() => loginWithGoogle()}
-            disabled={isLoading}
-            className="w-full text-black border border-grey rounded-full bg-transparent py-4 font-medium hover:text-white hover:border-transparent hover:bg-[#00187A]"
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="w-5 h-5 animate-spin" />
-                Signing in...
-              </>
-            ) : (
-              <>
-                <img src={SignUpImage} alt="Google" className="w-5 h-5" />
-                Sign up with Google
-              </>
-            )}
-          </Button>
+          <div className="w-full flex justify-center">
+            <GoogleLogin
+              onSuccess={handleGoogleLoginSuccess}
+              onError={() => handleGoogleLoginError(undefined)}
+              shape="pill"
+              width="100%"
+              size="large"
+              theme="outline"
+              logo_alignment="left"
+            />
+          </div>
+
+          {isLoading && (
+            <div className="flex items-center justify-center mt-3">
+              <Loader2 className="w-5 h-5 animate-spin mr-2" />
+              <span>Signing in...</span>
+            </div>
+          )}
 
           {errorMessage && (
             <div className="text-destructive text-sm text-center p-3 bg-destructive/10 rounded-lg border border-destructive/20">
