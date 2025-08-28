@@ -269,7 +269,7 @@ const Login = () => {
 
           <Button
             size="lg"
-            onClick={() => handlGoogleSignin()}
+            onClick={() => loginWithGoogle()}
             disabled={isLoading}
             className="w-full text-black border border-grey rounded-full bg-transparent py-4 font-medium hover:text-white hover:border-transparent hover:bg-[#00187A]"
           >
