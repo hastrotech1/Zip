@@ -5,6 +5,7 @@ dist/
 .github
 
 # environment files
+# .gitignore
 .env
 echo "helper/keys.env" >> .gitignore
 echo ".env" >> .gitignore
