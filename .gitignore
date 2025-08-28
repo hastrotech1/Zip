@@ -5,3 +5,4 @@ helper/Mapbox.env
 
 .trunk
 .github
+.env
