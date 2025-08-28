@@ -1,6 +1,8 @@
-###
+# node_modules and build outputs
 node_modules
-dist
+dist/
 .trunk
 .github
+
+# environment files
 .env
