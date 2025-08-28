@@ -84,6 +84,18 @@ const Login = () => {
     }
   };
 
+  const handleGoogleLoginError = (error: unknown) => {
+    console.error("Google Login Error:", error);
+    setErrorMessage("Google login failed. Please try again.");
+    setIsLoading(false);
+  };
+
+  const loginWithGoogle = useGoogleLogin({
+    onSuccess: handleGoogleLoginSuccess,
+    onError: handleGoogleLoginError,
+    flow: "auth-code",
+  });
+
 
 // const Login = () => {
 //   const navigate = useNavigate();
