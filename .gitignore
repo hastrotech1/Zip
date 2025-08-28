@@ -6,3 +6,6 @@ dist/
 
 # environment files
 .env
+echo "helper/keys.env" >> .gitignore
+echo ".env" >> .gitignore
+echo "*.env" >> .gitignore
