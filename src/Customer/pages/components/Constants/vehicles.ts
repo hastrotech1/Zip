@@ -21,7 +21,7 @@ export async function vehicle(name: string, price: number) {
   return response.data;
 }
 
-export const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN || "";
+export const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN || "pk.eyJ1IjoiaGFzdHJvLXRlY2giLCJhIjoiY203bXdkN3hpMGp3bjJrc2RtdW1odTJjbyJ9.YnSynYzhxYvs_XHa0j2QyA";
 
 export interface BackendVehicle {
   id: string;
