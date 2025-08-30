@@ -44,10 +44,8 @@ export default function PlaceOrderPage() {
   const [selDriver, setSelDriver] = useState<Driver | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // Add a state to store the order number
   const [orderNumber, setOrderNumber] = useState<string | null>(null);
 
-  // Use our custom hook for map logic
   const { mapWrap } = useMapbox(pickup, dropoff, (location, text) => {
     setPickupText(text);
     setPickup(location);
@@ -74,7 +72,6 @@ export default function PlaceOrderPage() {
       setFare(base + km * perKm);
     }, [pickup, dropoff, selectedVehicle, vehiclesWithImages]);
 
-  // Handle location selection
   const choose = (s: Suggest, role: "pick" | "drop") => {
     if (role === "pick") {
       setPickupText(s.place_name);
@@ -85,7 +82,6 @@ export default function PlaceOrderPage() {
     }
   };
 
-  // Fetch vehicles from backend on mount
   useEffect(() => {
     getVehicles().then((vehicles) => {
       setBackendVehicles(
@@ -113,13 +109,11 @@ export default function PlaceOrderPage() {
     }
   };
 
-  // Select driver
   const onSelectDriver = async (d: Driver) => {
     setSelDriver(d);
     setView("selected");
     toast.success(`You selected ${d.name}`, { position: "bottom-center" });
 
-    // Assign driver to order if orderNumber is available
     if (orderNumber) {
       try {
         await selectDriverForOrder(d.id, orderNumber);
@@ -134,7 +128,6 @@ export default function PlaceOrderPage() {
   const handleZipIt = async () => {
     if (!pickupText || !dropoffText || !fare) return;
 
-    // Find the selected vehicle object from backendVehicles
     const selectedVehicleObj = backendVehicles.find(
       (v) => v.type === selectedVehicle
     );
@@ -146,7 +139,6 @@ export default function PlaceOrderPage() {
     const user_mail = localStorage.getItem("user_mail") || "guest@example.com";
     setIsProcessing(true);
 
-    // 1. Handle payment first
     handlePaystackPayment({
       fare,
       user_mail,
@@ -160,7 +152,7 @@ export default function PlaceOrderPage() {
             estimate_fee: fare,
             selected_vehicle: selectedVehicleObj.id,
           });
-          setOrderNumber(shipment.data.customer_order_id); // or whatever field is the order number
+          setOrderNumber(shipment.data.customer_order_id);
           toast.success("Shipment created!");
           setView("form");
         } catch (e) {

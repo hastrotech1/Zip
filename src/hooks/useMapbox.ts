@@ -3,7 +3,7 @@ import mapboxgl, { Map as MapBoxMap } from "mapbox-gl";
 import { Coordinates } from "../../helper/types";
 import { MAPBOX_TOKEN } from "../Customer/pages/components/Constants/vehicles";
 
-mapboxgl.accessToken = MAPBOX_TOKEN;
+mapboxgl.accessToken = MAPBOX_TOKEN || "";
 
 export const useMapbox = (
   pickup: Coordinates | null,

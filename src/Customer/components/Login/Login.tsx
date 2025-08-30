@@ -49,16 +49,6 @@ const Login = () => {
         `${first_name} ${last_name}`,
         profile_image
       );
-
-      console.log("Final stored values check:", {
-        access_token: localStorage.getItem("access_token"),
-        refresh_token: localStorage.getItem("refresh_token"),
-        user_id: localStorage.getItem("user_id"),
-        user_mail: localStorage.getItem("user_mail"),
-        first_name: localStorage.getItem("first_name"),
-        picture: localStorage.getItem("picture"),
-      });
-
       navigate("/place-order");
     } catch (error) {
       console.error("Google Login Error:", error);
