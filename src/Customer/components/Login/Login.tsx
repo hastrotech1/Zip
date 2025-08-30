@@ -41,7 +41,7 @@ const Login = () => {
         response.data["refresh_token"] ||
         response.data["refreshToken"];
 
-      const userId = response.data["user_id"] || response.data["userId"];
+      const userId = response.data.id["user_id"] || response.data.id["userId"];
       const email =
         response.data["email"] || response.data["user_email"] || "";
       const name =
