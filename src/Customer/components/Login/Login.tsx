@@ -19,7 +19,7 @@ const Login = () => {
       setIsLoading(true);
       setErrorMessage("");
 
-      const response = await axios.post("api/auth/google", {
+      const response = await axios.post("https://ziplugs.geniusexcel.tech/auth/google", {
         oauth_provider: "google",
         user_type: "customer",
         google_id_token: idToken,
