@@ -19,51 +19,35 @@ const Login = () => {
       setIsLoading(true);
       setErrorMessage("");
 
-      // Send ID token to backend
-      const response = await axios.post(
-        "https://ziplugs.geniusexcel.tech/api/auth/google",
-        { 
-          oauth_provider: "google",
-          user_type: "customer",
-          google_id_token: idToken, }
-      );
+      const response = await axios.post("api/auth/google", {
+        oauth_provider: "google",
+        user_type: "customer",
+        google_id_token: idToken,
+      });
 
       console.log("Full Server Response:", response.data);
 
-      // Extract backend response fields with fallbacks
-      const accessToken =
-        response.data["access-token"] ||
-        response.data["access_token"] ||
-        response.data["accessToken"];
-
-      const refreshToken =
-        response.data["refresh-token"] ||
-        response.data["refresh_token"] ||
-        response.data["refreshToken"];
-
-      const userId = response.data.id["user_id"] || response.data.id["userId"];
-      const email =
-        response.data["email"] || response.data["user_email"] || "";
-      const name =
-        response.data["name"] ||
-        response.data["user_name"] ||
-        response.data["first_name"] ||
-        response.data["given_name"] ||
-        "";
-      const picture = response.data["picture"] || "";
+      const {
+        id: userId,
+        email,
+        first_name,
+        last_name,
+        profile_image,
+        access_token: accessToken,
+        refresh_token: refreshToken,
+      } = response.data.data;
 
       if (!userId) throw new Error("User ID not received from server");
       if (!accessToken) throw new Error("Access token not received from server");
 
-      // Store values in local storage via your auth helper
       auth.storeTokens(
         accessToken,
         refreshToken || "",
         userId,
-        null, // driver_id (not available here)
+        null, // driver_id
         email,
-        name,
-        picture
+        `${first_name} ${last_name}`,
+        profile_image
       );
 
       console.log("Final stored values check:", {
@@ -75,7 +59,6 @@ const Login = () => {
         picture: localStorage.getItem("picture"),
       });
 
-      // Navigate to place order page
       navigate("/place-order");
     } catch (error) {
       console.error("Google Login Error:", error);
@@ -84,12 +67,12 @@ const Login = () => {
       setIsLoading(false);
     }
   };
-
-  const handleGoogleLoginError = (error: unknown) => {
+  const handleGoogleLoginError = (error: unknown) => { 
     console.error("Google Login Error:", error);
     setErrorMessage("Google login failed. Please try again.");
-    setIsLoading(false);
+    setIsLoading(false); 
   };
+
 
   return (
     <div className="min-h-screen bg-[#00187A] flex flex-col max-auto">
