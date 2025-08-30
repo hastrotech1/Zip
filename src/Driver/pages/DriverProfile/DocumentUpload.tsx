@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import auth from '../../../../helper/authenticate';
+// import auth from '../../../../helper/authenticate';
 import Delivery from '../../../assets/delivery-man.png';
 
 // Define strict types for document fields and file types
@@ -74,6 +74,14 @@ const DOCUMENT_CONFIGS: DocumentConfig[] = [
 		allowedTypes: ['application/pdf'],
 	},
 ];
+
+// Map frontend field names to backend field names
+const FIELD_MAP: Record<DocumentField, string> = {
+	driver_photo: 'profile_photo',
+	driver_liscence: 'driver_license',
+	vehicle_inspection_report: 'inspection_report',
+	vehicle_insurance_policy: 'insurance_policy',
+};
 
 const DocumentUpload: React.FC = () => {
 	const [uploadedFiles, setUploadedFiles] = useState<UploadState>({
@@ -162,44 +170,43 @@ const DocumentUpload: React.FC = () => {
 		const formData = new FormData();
 		formData.append('user_id', user_id);
 
-		Object.entries(uploadedFiles).forEach(([field, file]) => {
+		// Use the FIELD_MAP to append files with correct backend field names
+		(Object.keys(FIELD_MAP) as DocumentField[]).forEach((frontendField) => {
+			const backendField = FIELD_MAP[frontendField];
+			const file = uploadedFiles[frontendField];
 			if (file) {
-				formData.append(field, file);
+				formData.append(backendField, file);
 			}
 		});
 
-		const URL = `https://ziplogistics.pythonanywhere.com/api/update-driver-profile-vehicle-docs/${user_id}`;
+		const URL = `https://ziplugs.geniusexcel.tech/api/upload-driver-documents`;
 
 		try {
 			setIsSubmitting(true);
 			setError(null);
 
-			const response = await auth.apiCall(URL, {
-				method: 'PUT',
+			const token = localStorage.getItem('access_token');
+			const response = await fetch(URL, {
+				method: 'POST',
+				headers: {
+					Authorization: `Bearer ${token || ''}`,
+				},
 				body: formData,
 			});
 
+			const responseData = await response.json();
+
 			if (!response.ok) {
-				const errorData = await response.json();
 				throw new Error(
-					errorData.message || `Upload failed with status: ${response.status}`
+					responseData.message || `Upload failed with status: ${response.status}`
 				);
 			}
 
-			const responseData = await response.json();
-			console.log('Upload successful', responseData);
-
-			if (responseData.driver_info_id) {
-				localStorage.setItem(
-					'driver_info_id',
-					responseData.driver_info_id.toString()
-				);
-				console.log(
-					'Saved driver_info_id to localStorage:',
-					responseData.driver_info_id
-				);
+			if (responseData.driver?.id) {
+				localStorage.setItem('driver_info_id', responseData.driver.id.toString());
+				console.log('Saved driver_info_id to localStorage:', responseData.driver.id);
 			} else {
-				console.error('No driver_info_id in response:', responseData);
+				console.error('No driver.id in response:', responseData);
 			}
 
 			navigate('/payment-details');

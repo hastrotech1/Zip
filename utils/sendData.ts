@@ -2,7 +2,7 @@
 const sendData = async (formData, setSuccess, setError, setLoading) => {
   try {
     // Replace with your API endpoint
-    const response = await fetch("https://api.example.com/place-order", {
+    const response = await fetch("https://ziplugs.geniusexcel.tech/api/shipments", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

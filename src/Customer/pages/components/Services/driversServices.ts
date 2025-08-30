@@ -1,22 +1,32 @@
-import { Driver, Coordinates } from "../../../../../helper/types";
-import { mockDrivers } from "../Data/MockData";
+import { Driver } from "../../../../../helper/types";
+import axios from "axios";
 
-export const fetchNearbyDrivers = async (
-  _pickup: Coordinates,
-  _dropoff: Coordinates
-): Promise<Driver[]> => {
+export const fetchNearbyDrivers = async (): Promise<Driver[]> => {
   try {
-    // TODO: Replace with real API call
-    // const res = await fetch("/api/nearby-drivers", {
-    //   method: "POST",
-    //   body: JSON.stringify({ pickup, dropoff })
-    // });
-    // return await res.json();
-
-    // Mock delay
-    await new Promise((resolve) => setTimeout(resolve, 800));
-    return mockDrivers;
+    const res = await fetch("https://ziplugs.geniusexcel.tech/api/available-drivers");
+    const json = await res.json();
+    return json.data; // array of drivers
   } catch {
     throw new Error("Failed to fetch drivers");
   }
 };
+
+
+
+export const fetchDriverById = async (driverId: string): Promise<Driver> => {
+  try {
+    const res = await fetch(`https://ziplugs.geniusexcel.tech/api/available-drivers/${driverId}`);
+    const json = await res.json();
+    return json.data;
+  } catch {
+    throw new Error("Failed to fetch driver details");
+  }
+};
+
+export async function selectDriverForOrder(driver_id: string, order_number: string) {
+  const response = await axios.post("https://ziplugs.geniusexcel.tech/api/customer-select-driver", {
+    driver_id,
+    order_number,
+  });
+  return response.data;
+}

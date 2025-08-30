@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import auth from "../../../../helper/authenticate";
+// import auth from "../../../../helper/authenticate";
 
 interface EmergencyContactState {
   contact_1: string;
@@ -62,29 +62,34 @@ const EmergencyContact: React.FC = () => {
       setError("Primary emergency contact number is invalid.");
       return;
     }
-
     if (contactInfo.contact_2 && !validatePhoneNumber(contactInfo.contact_2)) {
       setError("Second emergency contact number is invalid.");
       return;
     }
-
     if (contactInfo.contact_3 && !validatePhoneNumber(contactInfo.contact_3)) {
       setError("Third emergency contact number is invalid.");
       return;
     }
 
-    const URL = `https://ziplogistics.pythonanywhere.com/api/update-driver-emergency-contact/${user_id}`;
+    const URL = "https://ziplugs.geniusexcel.tech/api/driver-emergency-contact-details";
+    const payload = {
+      primary_emergency_contact: contactInfo.contact_1,
+      secondary_emergency_contact: contactInfo.contact_2 || null,
+      alternative_emergency_contact: contactInfo.contact_3 || null,
+    };
 
     try {
       setIsSubmitting(true);
       setError(null);
 
-      const response = await auth.apiCall(URL, {
-        method: "PATCH",
+      const token = localStorage.getItem("access_token");
+      const response = await fetch(URL, {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token || ""}`,
         },
-        body: JSON.stringify(contactInfo),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {
@@ -96,7 +101,7 @@ const EmergencyContact: React.FC = () => {
 
       const responseData = await response.json();
       console.log("Update successful", responseData);
-      navigate("/driver-dashboard"); // Navigate to appropriate next page
+      navigate("/driver-dashboard");
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "An unexpected error occurred";

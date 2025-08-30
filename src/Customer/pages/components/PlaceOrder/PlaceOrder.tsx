@@ -12,17 +12,22 @@ import {
   Coordinates,
   Suggest,
 } from "../../../../../helper/types";
+import { getVehicles } from "../../components/Constants/vehicles";
+import { vehicleImageByType } from "../Constants/vehicles";
 import { vehicleData } from "../Constants/vehicles";
 import { haversineKm } from "../../../../../utils/calculations";
 import { isValidNGPhone } from "../../../../../utils/phoneValidation";
+import {createShipment} from "../../../../../helper/createShipment"
 import { handlePaystackPayment } from "../Services/paymentService";
-import { fetchNearbyDrivers } from "../Services/driversServices";
+import { fetchNearbyDrivers, selectDriverForOrder } from "../Services/driversServices";
 import { useMapbox } from "../../../../hooks/useMapbox";
 import MobileHeader from "../MobileHeader/MobileHeader";
 
 export default function PlaceOrderPage() {
   const [view, setView] = useState<ViewState>("form");
   const [selectedVehicle, setVehicle] = useState(vehicleData[0].type);
+
+  const [backendVehicles, setBackendVehicles] = useState(vehicleData);
 
   const [pickupText, setPickupText] = useState("");
   const [dropoffText, setDropText] = useState("");
@@ -39,41 +44,35 @@ export default function PlaceOrderPage() {
   const [selDriver, setSelDriver] = useState<Driver | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
+  // Add a state to store the order number
+  const [orderNumber, setOrderNumber] = useState<string | null>(null);
+
   // Use our custom hook for map logic
   const { mapWrap } = useMapbox(pickup, dropoff, (location, text) => {
     setPickupText(text);
     setPickup(location);
   });
 
-  // Calculate fare when locations change
-  // useEffect(() => {
-  //   if (!pickup || !dropoff) {
-  //     setDistanceKm(null);
-  //     setFare(null);
-  //     return;
-  //   }
-  //   const calculatedFare = calculateFare(
-  //     pickup,
-  //     dropoff,
-  //     selectedVehicle,
-  //     vehicleData
-  //   );
-  //   setFare(calculatedFare);
-  // }, [pickup, dropoff, selectedVehicle]);
 
-  useEffect(() => {
-    if (!pickup || !dropoff) {
-      setDistanceKm(null);
-      setFare(null);
-      return;
-    }
-    const km = haversineKm(pickup, dropoff);
-    setDistanceKm(km);
+  const vehiclesWithImages = backendVehicles.map((v) => ({
+    ...v,
+    image: vehicleImageByType(v.type),
+  }));
 
-    const perKm = 1000;
-    const base = vehicleData.find((v) => v.type === selectedVehicle)?.fare || 0;
-    setFare(base + km * perKm);
-  }, [pickup, dropoff, selectedVehicle]);
+    useEffect(() => {
+      if (!pickup || !dropoff) {
+        setDistanceKm(null);
+        setFare(null);
+        return;
+      }
+      const km = haversineKm(pickup, dropoff);
+      setDistanceKm(km);
+
+      const base =
+        vehiclesWithImages.find((v) => v.type === selectedVehicle)?.fare || 0;
+      const perKm = 1000;
+      setFare(base + km * perKm);
+    }, [pickup, dropoff, selectedVehicle, vehiclesWithImages]);
 
   // Handle location selection
   const choose = (s: Suggest, role: "pick" | "drop") => {
@@ -86,12 +85,25 @@ export default function PlaceOrderPage() {
     }
   };
 
+  // Fetch vehicles from backend on mount
+  useEffect(() => {
+    getVehicles().then((vehicles) => {
+      setBackendVehicles(
+        vehicles.map((v) => ({
+          id: v.id,
+          type: v.name,
+          fare: v.price,
+          image: vehicleImageByType(v.name),
+        }))
+      );
+    });
+  }, []);
+
   // Find drivers
   const onFindDrivers = async () => {
-    if (!fare || !pickup || !dropoff) return;
     try {
       setLD(true);
-      const driverData = await fetchNearbyDrivers(pickup, dropoff);
+      const driverData = await fetchNearbyDrivers();
       setDrivers(driverData);
       setView("drivers");
     } catch {
@@ -102,25 +114,60 @@ export default function PlaceOrderPage() {
   };
 
   // Select driver
-  const onSelectDriver = (d: Driver) => {
+  const onSelectDriver = async (d: Driver) => {
     setSelDriver(d);
     setView("selected");
     toast.success(`You selected ${d.name}`, { position: "bottom-center" });
+
+    // Assign driver to order if orderNumber is available
+    if (orderNumber) {
+      try {
+        await selectDriverForOrder(d.id, orderNumber);
+        toast.success("Driver assigned to your order!");
+      } catch {
+        toast.error("Failed to assign driver.");
+      }
+    }
   };
+  
 
-  // Handle payment
-  const handlePayment = () => {
-    if (!fare) return;
+  const handleZipIt = async () => {
+    if (!pickupText || !dropoffText || !fare) return;
+
+    // Find the selected vehicle object from backendVehicles
+    const selectedVehicleObj = backendVehicles.find(
+      (v) => v.type === selectedVehicle
+    );
+    if (!selectedVehicleObj) {
+      toast.error("Please select a vehicle.");
+      return;
+    }
+
     const user_mail = localStorage.getItem("user_mail") || "guest@example.com";
-
     setIsProcessing(true);
+
+    // 1. Handle payment first
     handlePaystackPayment({
       fare,
       user_mail,
       receiverPhone,
-      onSuccess: () => {
-        setIsProcessing(false);
-        setView("form");
+      onSuccess: async () => {
+        try {
+          const shipment = await createShipment({
+            pickup_location: pickupText,
+            delivery_location: dropoffText,
+            receiver_phone: receiverSelf ? "" : receiverPhone,
+            estimate_fee: fare,
+            selected_vehicle: selectedVehicleObj.id,
+          });
+          setOrderNumber(shipment.data.customer_order_id); // or whatever field is the order number
+          toast.success("Shipment created!");
+          setView("form");
+        } catch (e) {
+          toast.error("Failed to create shipment.");
+        } finally {
+          setIsProcessing(false);
+        }
       },
       onClose: () => {
         setIsProcessing(false);
@@ -145,7 +192,7 @@ export default function PlaceOrderPage() {
             <>
               {/* VEHICLES */}
               <div className="flex gap-2">
-                {vehicleData.map((v) => (
+                {vehiclesWithImages.map((v) => (
                   <motion.div
                     key={v.type}
                     whileHover={{ scale: 1.05 }}
@@ -302,7 +349,7 @@ export default function PlaceOrderPage() {
               {/* buttons */}
               <button
                 disabled={isProcessing}
-                onClick={handlePayment}
+                onClick={handleZipIt}
                 className={`w-full py-4 font-bold rounded-xl transition-colors ${
                   isProcessing
                     ? "bg-gray-500 cursor-not-allowed"

@@ -1,5 +1,4 @@
 //All interfaces and types
-
 export interface ShipmentData {
   status: string;
   customer_order_id: string;
@@ -25,11 +24,6 @@ export interface Driver {
   phone: string;
 }
 
-export interface Vehicle {
-  type: string;
-  fare: number;
-  image: string;
-}
 
 export interface Suggest {
   place_name: string;
@@ -37,3 +31,10 @@ export interface Suggest {
 }
 
 export type ViewState = "form" | "drivers" | "selected";
+
+export interface BackendVehicle {
+  id: string;
+  name: string;
+  description: string | null;
+  price: number;
+}

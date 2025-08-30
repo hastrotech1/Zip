@@ -4,26 +4,26 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { AlertCircle, CheckCircle2 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import auth from "../../../../helper/authenticate";
+// import auth from "../../../../helper/authenticate";
 import { useNavigate } from "react-router-dom";
 
 interface FormData {
   bank_name: string;
-  account_holder_name: string;
   account_number: string;
+  account_name: string;
 }
 
 const PaymentDetailsForm = () => {
   const [formData, setFormData] = useState<FormData>({
     bank_name: "",
-    account_holder_name: "",
     account_number: "",
+    account_name: "",
   });
 
   const [error, setError] = useState<string>("");
   const [success, setSuccess] = useState<boolean>(false);
-  const [driver_id, setUserId] = useState<string | null>(null);
-  const [driver_info_id, setDriverInfoId] = useState<string | null>(null);
+  // const [driver_id, setUserId] = useState<string | null>(null);
+  // const [driver_info_id, setDriverInfoId] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
@@ -49,8 +49,8 @@ const PaymentDetailsForm = () => {
       return;
     }
 
-    setUserId(storedUserId);
-    setDriverInfoId(storedDriverInfoId);
+    // setUserId(storedUserId);
+    // setDriverInfoId(storedDriverInfoId);
   }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,8 +66,8 @@ const PaymentDetailsForm = () => {
       setError("Bank name is required");
       return false;
     }
-    if (!formData.account_holder_name.trim()) {
-      setError("Account holder name is required");
+    if (!formData.account_name.trim()) {
+      setError("Account name is required");
       return false;
     }
     if (!formData.account_number.trim()) {
@@ -83,23 +83,12 @@ const PaymentDetailsForm = () => {
     setSuccess(false);
 
     if (!validateForm()) return;
-    if (!driver_id || !driver_info_id) {
-      setError(
-        "User information missing. Please complete previous steps first."
-      );
-      return;
-    }
 
     setLoading(true);
     try {
-      // Use the integer driver_info_id in the URL
-      const url = `https://ziplogistics.pythonanywhere.com/api/update-driver-payment-details/${driver_id}/driver_info_id=${driver_info_id}`;
-
-      console.log("Sending request to:", url);
-      console.log("With data:", formData);
-
-      const response = await auth.apiCall(url, {
-        method: "PUT",
+      const url = "https://ziplugs.geniusexcel.tech/api/driver-bank-details";
+      const response = await fetch(url, {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -108,8 +97,6 @@ const PaymentDetailsForm = () => {
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error("Error response:", errorText, "Status:", response.status);
-
         try {
           const errorData = JSON.parse(errorText);
           throw new Error(
@@ -122,12 +109,10 @@ const PaymentDetailsForm = () => {
         }
       }
 
-      const responseData = await response.json();
-      console.log("Success response:", responseData);
+      await response.json();
       setSuccess(true);
       navigate("/contact");
     } catch (err) {
-      console.error("Full error:", err);
       setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
       setLoading(false);
@@ -156,19 +141,16 @@ const PaymentDetailsForm = () => {
           </div>
 
           <div className="space-y-2">
-            <label
-              htmlFor="account_holder_name"
-              className="text-sm font-medium"
-            >
-              Account Holder Name
+            <label htmlFor="account_name" className="text-sm font-medium">
+              Account Name
             </label>
             <Input
-              id="account_holder_name"
-              name="account_holder_name"
-              value={formData.account_holder_name}
+              id="account_name"
+              name="account_name"
+              value={formData.account_name}
               onChange={handleInputChange}
               className="w-full"
-              placeholder="Enter account holder name"
+              placeholder="Enter account name"
             />
           </div>
 

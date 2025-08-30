@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-// import axios from "axios";
+import axios from "axios";
 import { Download, Filter, AlertCircle, RefreshCw } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ShipmentData } from "../../../../../helper/types";
@@ -29,25 +29,24 @@ const OrderHistory = () => {
 
   useEffect(() => {
     const fetchOrderHistory = async () => {
-      // Uncomment the following code to use a real API endpoint
-      // try {
-      //   setIsLoading(true);
-      //   const response = await axios.get("/api/orders", {
-      //     headers: {
-      //       Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-      //     },
-      //   });
-      //   const orders = response.data;
-      //   setOrderHistory(orders);
-      //   setFilteredOrders(orders);
-      // } catch (error) {
-      //   console.error("Error:", error);
-      //   setError("Failed to load order history.");
-      // } finally {
-      //   setIsLoading(false);
-      // }
+     try {
+        setIsLoading(true);
+        const response = await axios.get("https://ziplugs.geniusexcel.tech//api/shipments", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        });
+        const orders = response.data;
+        setOrderHistory(orders);
+        setFilteredOrders(orders);
+      } catch (error) {
+        console.error("Error:", error);
+        setError("Failed to load order history.");
+      } finally {
+        setIsLoading(false);
+      }
       // In a real app, this would use localStorage, but for demo we'll simulate
-      const user_id = "demo_user";
+      const user_id = localStorage.getItem("user_id");
 
       if (!user_id) {
         setError("User not authenticated");
@@ -60,37 +59,37 @@ const OrderHistory = () => {
         setError(null);
 
         // Simulate API call with demo data
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        // await new Promise((resolve) => setTimeout(resolve, 1000));
 
-        const demoData = [
-          {
-            status: "completed",
-            customer_order_id: "ORD-001",
-            origin: "New York",
-            destination: "Los Angeles",
-            deliveryDate: "2024-12-15",
-            shippingCost: 25.99,
-          },
-          {
-            status: "pending",
-            customer_order_id: "ORD-002",
-            origin: "Chicago",
-            destination: "Miami",
-            deliveryDate: "2024-12-20",
-            shippingCost: 32.5,
-          },
-          {
-            status: "cancelled",
-            customer_order_id: "ORD-003",
-            origin: "Seattle",
-            destination: "Denver",
-            deliveryDate: "2024-12-10",
-            shippingCost: 18.75,
-          },
-        ];
+        // const demoData = [
+        //   {
+        //     status: "completed",
+        //     customer_order_id: "ORD-001",
+        //     origin: "New York",
+        //     destination: "Los Angeles",
+        //     deliveryDate: "2024-12-15",
+        //     shippingCost: 25.99,
+        //   },
+        //   {
+        //     status: "pending",
+        //     customer_order_id: "ORD-002",
+        //     origin: "Chicago",
+        //     destination: "Miami",
+        //     deliveryDate: "2024-12-20",
+        //     shippingCost: 32.5,
+        //   },
+        //   {
+        //     status: "cancelled",
+        //     customer_order_id: "ORD-003",
+        //     origin: "Seattle",
+        //     destination: "Denver",
+        //     deliveryDate: "2024-12-10",
+        //     shippingCost: 18.75,
+        //   },
+        // ];
 
-        setOrderHistory(demoData);
-        setFilteredOrders(demoData);
+        // setOrderHistory(demoData);
+        // setFilteredOrders(demoData);
       } catch (error) {
         console.error("Error:", error);
         setError("Failed to load data. Please try again.");
