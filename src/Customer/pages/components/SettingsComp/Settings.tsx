@@ -55,7 +55,7 @@ const Settings = () => {
       try {
         setIsLoading(true);
         const response = await axios.get(
-          `https://ziplogistics.pythonanywhere.com/api/get-user-info/${user_id}`,
+          `https://ziplugs.geniusexcel.tech/api/auth/user`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

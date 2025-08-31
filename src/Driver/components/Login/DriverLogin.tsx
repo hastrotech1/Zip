@@ -24,9 +24,7 @@ const DriverLogin = () => {
         user_type: "customer",
         google_id_token: idToken,
       });
-
-      console.log("Full Server Response:", response.data);
-
+      
       const {
         id: driver_id,
         email,
@@ -49,15 +47,6 @@ const DriverLogin = () => {
         `${first_name} ${last_name}`,
         profile_image
       );
-
-      console.log("Final stored values check:", {
-        access_token: localStorage.getItem("access_token"),
-        refresh_token: localStorage.getItem("refresh_token"),
-        user_id: localStorage.getItem("user_id"),
-        user_mail: localStorage.getItem("user_mail"),
-        first_name: localStorage.getItem("first_name"),
-        picture: localStorage.getItem("picture"),
-      });
 
       const isNewDriver = response.data["is_new_driver"] ?? false;
 
