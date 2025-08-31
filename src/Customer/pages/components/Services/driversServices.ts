@@ -13,7 +13,7 @@ import axios from "axios";
 
 export const fetchNearbyDrivers = async (): Promise<Driver[]> => {
   try {
-    const token = localStorage.getItem("accesToken"); 
+    const token = localStorage.getItem("accessToken"); 
     if (!token) throw new Error("No access token found");
 
     const res = await fetch("https://ziplugs.geniusexcel.tech/api/available-drivers", {
