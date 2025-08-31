@@ -39,7 +39,7 @@ export interface BackendVehicle {
 // }
 
 export async function vehicle(name: string, price: number) {
-  const token = localStorage.getItem("access_token");
+  const token = localStorage.getItem("accessToken");
   if (!token) throw new Error("No access token found");
 
   const response = await axios.post(
