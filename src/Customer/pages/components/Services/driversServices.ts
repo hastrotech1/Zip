@@ -13,7 +13,7 @@ import axios from "axios";
 
 export const fetchNearbyDrivers = async (): Promise<Driver[]> => {
   try {
-    const token = localStorage.getItem("access_token"); // or however you store it
+    const token = localStorage.getItem("accesToken"); 
     if (!token) throw new Error("No access token found");
 
     const res = await fetch("https://ziplugs.geniusexcel.tech/api/available-drivers", {
@@ -50,7 +50,7 @@ export const fetchNearbyDrivers = async (): Promise<Driver[]> => {
 
 export const fetchDriverById = async (driverId: string): Promise<Driver> => {
   try {
-    const token = localStorage.getItem("access_token");
+    const token = localStorage.getItem("accessToken");
     if (!token) throw new Error("No access token found");
 
     const res = await fetch(`https://ziplugs.geniusexcel.tech/api/available-drivers/${driverId}`, {
@@ -83,7 +83,7 @@ export const fetchDriverById = async (driverId: string): Promise<Driver> => {
 // }
 
 export async function selectDriverForOrder(driver_id: string, order_number: string) {
-  const token = localStorage.getItem("access_token");
+  const token = localStorage.getItem("accessToken");
   if (!token) throw new Error("No access token found");
 
   const response = await axios.post(
