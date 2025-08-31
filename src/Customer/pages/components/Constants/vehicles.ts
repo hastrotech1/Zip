@@ -61,7 +61,7 @@ export async function getVehicles(params?: { name?: string; price?: number }) {
   if (!token) throw new Error("No access token found");
 
   const response = await axios.get<{ message: string; data: BackendVehicle[] }>(
-    "https://ziplugs.geniusexcel.tech//vehicles",
+    "https://ziplugs.geniusexcel.tech/api/vehicles",
     {
       params,
       headers: {
