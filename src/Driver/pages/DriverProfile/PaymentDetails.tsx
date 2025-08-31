@@ -86,11 +86,13 @@ const PaymentDetailsForm = () => {
 
     setLoading(true);
     try {
+      const token = localStorage.getItem("accessToken");
       const url = "https://ziplugs.geniusexcel.tech/api/driver-bank-details";
       const response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(formData),
       });

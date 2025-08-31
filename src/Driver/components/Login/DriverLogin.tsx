@@ -28,7 +28,7 @@ const DriverLogin = () => {
       console.log("Full Server Response:", response.data);
 
       const {
-        id: userId,
+        id: driver_id,
         email,
         first_name,
         last_name,
@@ -37,14 +37,14 @@ const DriverLogin = () => {
         refresh_token: refreshToken,
       } = response.data.data;
 
-      if (!userId) throw new Error("User ID not received from server");
+      if (!driver_id) throw new Error("User ID not received from server");
       if (!accessToken) throw new Error("Access token not received from server");
 
       auth.storeTokens(
         accessToken,
         refreshToken || "",
-        userId,
-        null, // driver_id
+        null, // user_id
+        driver_id,
         email,
         `${first_name} ${last_name}`,
         profile_image
