@@ -74,7 +74,8 @@ const AdminLogin: React.FC = () => {
           response.data["user_id"],
           response.data["user_mail"],
           response.data["first_name"],
-          response.data["user_name"]
+          response.data["user_name"],
+          response.data["email"]
         );
 
         console.log(response.data);
