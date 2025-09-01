@@ -1,5 +1,9 @@
 //All interfaces and types
 export interface ShipmentData {
+  id: string;
+  selected_vehicle: string;
+  created_at: string;
+  receiver_phone: string;
   status: string;
   customer_order_id: string;
   origin: string;
