@@ -27,7 +27,6 @@ export const Profile = () => {
   if (!driver) return null;
 
   const handleToggleOnline = () => {
-    // TODO: Call backend API to update online status
     console.log("Updating online status via backend...");
 
     toggleOnlineStatus();

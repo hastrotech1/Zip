@@ -5,81 +5,32 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { MapPin, Package, Clock, Phone } from "lucide-react";
 import { useDriverStore } from "../../store/driverStore";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import MobileHeader from "../MobileHeader/MobileHeader";
 
 export const AvailableDeliveries = () => {
   const {
     availableDeliveries,
     driver,
-    acceptDelivery,
     fetchAvailableDeliveries,
   } = useDriverStore();
-  // const navigate = useNavigate();
 
   useEffect(() => {
     fetchAvailableDeliveries();
   }, [fetchAvailableDeliveries]);
 
-  // const handleAcceptDelivery = async (deliveryId: string) => {
-  //   try {
-  //     // TODO: Call backend API to accept delivery
-  //     console.log(`Accepting delivery ${deliveryId} via backend...`);
+  const navigate = useNavigate();
+  const { acceptDelivery } = useDriverStore();
 
-  //     acceptDelivery(deliveryId);
-  //     toast({
-  //       title: "Delivery Accepted!",
-  //       description: "You have successfully accepted this delivery.",
-  //     });
-  //     navigate("/delivery-history");
-  //   } catch (error) {
-  //     toast({
-  //       title: "Error",
-  //       description: `Failed to accept delivery: ${
-  //         error instanceof Error ? error.message : "Unknown error"
-  //       }`,
-  //       variant: "destructive",
-  //     });
-  //   }
-  // };
+  const handleAcceptDelivery = async () => {
+    try {
+      await acceptDelivery(delivery_id);
+      navigate('/delivery-history');
+    } catch (error) {
+        console.error('Failed to accept delivery:', error);
+    }
+  };
 
-  // const handleAcceptDelivery = async (deliveryId: string) => {
-  //   try {
-  //     console.log(`Attempting to accept delivery ${deliveryId}`);
-
-  //     // Check if delivery exists before accepting
-  //     const delivery = availableDeliveries.find((d) => d.id === deliveryId);
-  //     if (!delivery) {
-  //       throw new Error("Delivery not found");
-  //     }
-
-  //     // TODO: Call backend API to accept delivery
-  //     console.log(`Accepting delivery ${deliveryId} via backend...`);
-
-  //     // Accept the delivery in the store
-  //     acceptDelivery(deliveryId);
-
-  //     // Show success message
-  //     toast({
-  //       title: "Delivery Accepted!",
-  //       description: "You have successfully accepted this delivery.",
-  //     });
-
-  //     // Navigate to deliveries page with a small delay to ensure state update
-  //     setTimeout(() => {
-  //       navigate("/deliveries");
-  //     }, 100);
-  //   } catch (error) {
-  //     console.error("Error accepting delivery:", error);
-  //     toast({
-  //       title: "Error",
-  //       description: `Failed to accept delivery: ${
-  //         error instanceof Error ? error.message : "Unknown error"
-  //       }`,
-  //       variant: "destructive",
-  //     });
-  //   }
-  // };
 
   if (!driver?.isOnline) {
     return (
@@ -203,7 +154,7 @@ export const AvailableDeliveries = () => {
                     </div>
 
                     <Button
-                      onClick={() => acceptDelivery(delivery.id)}
+                      onClick={handleAcceptDelivery}
                       className="w-full bg-blue-600 hover:bg-blue-700"
                     >
                       Accept Delivery
