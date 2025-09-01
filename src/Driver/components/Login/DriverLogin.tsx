@@ -40,6 +40,10 @@ const DriverLogin = () => {
 
       const isNewDriver = response.data["is_new_driver"] ?? false;
       
+      navigate(isNewDriver ? "/document-upload" : "/deliveries");
+    
+      console.log("Driver status:", isNewDriver ? "New" : "Existing");
+
       auth.storeTokens(
         accessToken,
         refreshToken || "",
@@ -49,11 +53,6 @@ const DriverLogin = () => {
         `${first_name} ${last_name}`,
         profile_image
       );
-
-
-      // console.log("Driver status:", isNewDriver ? "New" : "Existing");
-
-      navigate(isNewDriver ? "/document-upload" : "/deliveries");
 
 
     } catch (error) {
