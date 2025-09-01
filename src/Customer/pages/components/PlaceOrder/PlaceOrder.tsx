@@ -82,17 +82,48 @@ export default function PlaceOrderPage() {
     }
   };
 
-  useEffect(() => {
-    getVehicles().then((vehicles) => {
-      setBackendVehicles(
-        vehicles.map((v) => ({
-          id: v.id,
-          name: v.name,
-          price: v.price,
-          image: vehicleImageByName(v.name),
-        }))
-      );
-    });
+  // useEffect(() => {
+  //   getVehicles().then((vehicles) => {
+  //     setBackendVehicles(
+  //       vehicles.map((v) => ({
+  //         id: v.id,
+  //         name: v.name,
+  //         price: v.price,
+  //         image: vehicleImageByName(v.name),
+  //       }))
+  //     );
+  //   });
+  // }, []);
+
+    useEffect(() => {
+    const loadVehicles = async () => {
+      try {
+        console.log("Loading vehicles from backend...");
+        const vehicles = await getVehicles();
+        console.log("Raw vehicles data:", vehicles);
+        
+        if (vehicles && vehicles.length > 0) {
+          const mappedVehicles = vehicles.map((v) => ({
+            id: v.id,
+            name: v.name,
+            price: typeof v.price === 'string' ? parseFloat(v.price) : v.price, // Handle string prices
+            image: vehicleImageByName(v.name),
+          }));
+          
+          console.log("Mapped vehicles:", mappedVehicles);
+          setBackendVehicles(mappedVehicles);
+        } else {
+          console.log("No vehicles returned from backend, using defaults");
+          setBackendVehicles(vehicleData);
+        }
+      } catch (error) {
+        console.error("Failed to fetch vehicles:", error);
+        toast.error("Failed to load vehicles, using defaults");
+        setBackendVehicles(vehicleData); // Fallback to default vehicles
+      }
+    };
+
+    loadVehicles();
   }, []);
 
   // Find drivers
