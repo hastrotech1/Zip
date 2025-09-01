@@ -74,7 +74,7 @@ const DriverLogin = () => {
 
     const response = await axios.post("https://ziplugs.geniusexcel.tech/auth/google", {
       oauth_provider: "google",
-      user_type: "customer",
+      user_type: "driver",
       google_id_token: idToken,
     });
     
