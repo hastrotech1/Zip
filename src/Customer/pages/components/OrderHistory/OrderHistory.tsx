@@ -31,7 +31,7 @@ const OrderHistory = () => {
     const fetchOrderHistory = async () => {
      try {
         setIsLoading(true);
-        const response = await axios.get("https://ziplugs.geniusexcel.tech//api/shipments", {
+        const response = await axios.get("https://ziplugs.geniusexcel.tech/api/shipments", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("access_token")}`,
           },
