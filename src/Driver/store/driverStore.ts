@@ -279,9 +279,24 @@ interface NormalizedDelivery {
   status: string;
 }
 
-interface Driver {
+export interface Driver {
   id: string;
+  name: string;
+  email: string;
+  phone: string;
   isOnline: boolean;
+  rating: number;
+  completedDeliveries: number;
+  vehicle: {
+    type: string;
+    model: string;
+    plateNumber: string;
+  };
+  documents: {
+    id: { verified: boolean };
+    license: { verified: boolean };
+    vehicle: { verified: boolean };
+  };
 }
 
 interface DriverStore {
@@ -323,8 +338,23 @@ const normalizeDelivery = (d: any): NormalizedDelivery => ({
 
 export const useDriverStore = create<DriverStore>((set, get) => ({
   driver: {
-    id: "driver-1", // placeholder
+    id: "", // placeholder
     isOnline: true,
+    name: "",
+    email: "",
+    phone: "",
+    rating: 0,
+    completedDeliveries: 0,
+    vehicle: {
+      type: "",
+      model: "",
+      plateNumber: "",
+    },
+    documents: {
+      id: { verified: false },
+      license: { verified: false },
+      vehicle: { verified: false },
+    },
   },
   availableDeliveries: [],
   myDeliveries: [],
