@@ -38,6 +38,8 @@ const DriverLogin = () => {
       if (!driver_id) throw new Error("User ID not received from server");
       if (!accessToken) throw new Error("Access token not received from server");
 
+      const isNewDriver = response.data["is_new_driver"] ?? false;
+      
       auth.storeTokens(
         accessToken,
         refreshToken || "",
@@ -48,7 +50,6 @@ const DriverLogin = () => {
         profile_image
       );
 
-      const isNewDriver = response.data["is_new_driver"] ?? false;
 
       // console.log("Driver status:", isNewDriver ? "New" : "Existing");
 
