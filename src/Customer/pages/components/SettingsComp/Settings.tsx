@@ -46,7 +46,6 @@ const Settings = () => {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      // Check if we have required authentication data
       if (!user_id || !token) {
         setError("Authentication required. Please log in again.");
         return;
@@ -93,7 +92,6 @@ const Settings = () => {
           setError("Network error. Please check your connection.");
         }
 
-        // Set fallback data from localStorage if API fails
         setProfile({
           full_name: localStorage.getItem("user_name") || "",
           phone_number: "",
@@ -175,7 +173,7 @@ const Settings = () => {
 
     try {
       const response = await axios.patch(
-        `https://ziplogistics.pythonanywhere.com/api/update-customer-profile-details/${user_id}`,
+        `https://ziplugs.geniusexcel.tech/api/auth/user`,
         sendData,
         {
           headers: {
