@@ -185,7 +185,7 @@ const DocumentUpload: React.FC = () => {
 			setIsSubmitting(true);
 			setError(null);
 
-			const token = localStorage.getItem('access_token');
+			const token = localStorage.getItem('accessToken');
 			const response = await fetch(URL, {
 				method: 'POST',
 				headers: {
