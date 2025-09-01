@@ -33,7 +33,7 @@ const OrderHistory = () => {
         setIsLoading(true);
         const response = await axios.get("https://ziplugs.geniusexcel.tech/api/shipments", {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },
         });
         const orders = response.data;
