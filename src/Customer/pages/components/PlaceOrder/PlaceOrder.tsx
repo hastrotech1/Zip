@@ -13,7 +13,7 @@ import {
   Suggest,
 } from "../../../../../helper/types";
 import { getVehicles } from "../../components/Constants/vehicles";
-import { vehicleImageByType } from "../Constants/vehicles";
+import { vehicleImageByName } from "../Constants/vehicles";
 import { vehicleData } from "../Constants/vehicles";
 import { haversineKm } from "../../../../../utils/calculations";
 import { isValidNGPhone } from "../../../../../utils/phoneValidation";
@@ -25,7 +25,7 @@ import MobileHeader from "../MobileHeader/MobileHeader";
 
 export default function PlaceOrderPage() {
   const [view, setView] = useState<ViewState>("form");
-  const [selectedVehicle, setVehicle] = useState(vehicleData[0].type);
+  const [selectedVehicle, setVehicle] = useState(vehicleData[0].name);
 
   const [backendVehicles, setBackendVehicles] = useState(vehicleData);
 
@@ -54,7 +54,7 @@ export default function PlaceOrderPage() {
 
   const vehiclesWithImages = backendVehicles.map((v) => ({
     ...v,
-    image: vehicleImageByType(v.type),
+    image: vehicleImageByName(v.name),
   }));
 
     useEffect(() => {
@@ -67,7 +67,7 @@ export default function PlaceOrderPage() {
       setDistanceKm(km);
 
       const base =
-        vehiclesWithImages.find((v) => v.type === selectedVehicle)?.fare || 0;
+        vehiclesWithImages.find((v) => v.name === selectedVehicle)?.price || 0;
       const perKm = 1000;
       setFare(base + km * perKm);
     }, [pickup, dropoff, selectedVehicle, vehiclesWithImages]);
@@ -87,9 +87,9 @@ export default function PlaceOrderPage() {
       setBackendVehicles(
         vehicles.map((v) => ({
           id: v.id,
-          type: v.name,
-          fare: v.price,
-          image: vehicleImageByType(v.name),
+          name: v.name,
+          price: v.price,
+          image: vehicleImageByName(v.name),
         }))
       );
     });
@@ -129,7 +129,7 @@ export default function PlaceOrderPage() {
     if (!pickupText || !dropoffText || !fare) return;
 
     const selectedVehicleObj = backendVehicles.find(
-      (v) => v.type === selectedVehicle
+      (v) => v.name === selectedVehicle
     );
     if (!selectedVehicleObj) {
       toast.error("Please select a vehicle.");
@@ -186,21 +186,21 @@ export default function PlaceOrderPage() {
               <div className="flex gap-2">
                 {vehiclesWithImages.map((v) => (
                   <motion.div
-                    key={v.type}
+                    key={v.name}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={() => setVehicle(v.type)}
+                    onClick={() => setVehicle(v.name)}
                     className={cn(
                       "flex-1 p-4 rounded-xl border cursor-pointer flex flex-col items-center",
-                      selectedVehicle === v.type
+                      selectedVehicle === v.name
                         ? "bg-blue-100 border-blue-500"
                         : "bg-white border-gray-300"
                     )}
                   >
-                    <img src={v.image} alt={v.type} className="w-14 h-14" />
-                    <span className="text-sm font-semibold mt-1">{v.type}</span>
+                    <img src={v.image} alt={v.name} className="w-14 h-14" />
+                    <span className="text-sm font-semibold mt-1">{v.name}</span>
                     <span className="text-xs text-gray-500">
-                      ₦{v.fare.toLocaleString()}
+                      ₦{v.price.toLocaleString()}
                     </span>
                   </motion.div>
                 ))}
