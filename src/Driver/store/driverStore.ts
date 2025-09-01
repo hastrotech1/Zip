@@ -118,7 +118,7 @@ export const useDriverStore = create<DriverStore>((set, get) => ({
   fetchAvailableDeliveries: async () => {
     try {
       const token = localStorage.getItem("accessToken");
-      const res = await axios.get("/api/driver-delivery-management", {
+      const res = await axios.get("https://ziplugs.geniusexcel.tech/api/driver-delivery-management", {
         headers: { Authorization: `Bearer ${token}` },
       });
       const normalized = res.data.data.map(normalizeDelivery);
@@ -134,10 +134,10 @@ export const useDriverStore = create<DriverStore>((set, get) => ({
 
       // fetch both active + completed in parallel
       const [activeRes, completedRes] = await Promise.all([
-        axios.get("/api/driver-delivery-management?status=active", {
+        axios.get("https://ziplugs.geniusexcel.tech/api/driver-delivery-management?status=active", {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        axios.get("/api/driver-delivery-management?status=completed", {
+        axios.get("https://ziplugs.geniusexcel.tech/api/driver-delivery-management?status=completed", {
           headers: { Authorization: `Bearer ${token}` },
         }),
       ]);
@@ -177,8 +177,7 @@ export const useDriverStore = create<DriverStore>((set, get) => ({
         description: "You have successfully accepted this delivery.",
       });
       
-      // Note: useNavigate should be called from within a React component, not here
-      // You'll need to handle navigation in your component after calling this method
+
     } catch (err) {
       toast({
         title: "Error",
