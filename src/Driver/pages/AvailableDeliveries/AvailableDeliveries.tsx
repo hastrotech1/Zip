@@ -5,8 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { MapPin, Package, Clock, Phone } from "lucide-react";
 import { useDriverStore } from "../../store/driverStore";
-import { toast } from "@/hooks/use-toast";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import MobileHeader from "../MobileHeader/MobileHeader";
 
 export const AvailableDeliveries = () => {
@@ -16,33 +15,33 @@ export const AvailableDeliveries = () => {
     acceptDelivery,
     fetchAvailableDeliveries,
   } = useDriverStore();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   useEffect(() => {
     fetchAvailableDeliveries();
   }, [fetchAvailableDeliveries]);
 
-  const handleAcceptDelivery = async (deliveryId: string) => {
-    try {
-      // TODO: Call backend API to accept delivery
-      console.log(`Accepting delivery ${deliveryId} via backend...`);
+  // const handleAcceptDelivery = async (deliveryId: string) => {
+  //   try {
+  //     // TODO: Call backend API to accept delivery
+  //     console.log(`Accepting delivery ${deliveryId} via backend...`);
 
-      acceptDelivery(deliveryId);
-      toast({
-        title: "Delivery Accepted!",
-        description: "You have successfully accepted this delivery.",
-      });
-      navigate("/delivery-history");
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: `Failed to accept delivery: ${
-          error instanceof Error ? error.message : "Unknown error"
-        }`,
-        variant: "destructive",
-      });
-    }
-  };
+  //     acceptDelivery(deliveryId);
+  //     toast({
+  //       title: "Delivery Accepted!",
+  //       description: "You have successfully accepted this delivery.",
+  //     });
+  //     navigate("/delivery-history");
+  //   } catch (error) {
+  //     toast({
+  //       title: "Error",
+  //       description: `Failed to accept delivery: ${
+  //         error instanceof Error ? error.message : "Unknown error"
+  //       }`,
+  //       variant: "destructive",
+  //     });
+  //   }
+  // };
 
   // const handleAcceptDelivery = async (deliveryId: string) => {
   //   try {
@@ -204,7 +203,7 @@ export const AvailableDeliveries = () => {
                     </div>
 
                     <Button
-                      onClick={() => handleAcceptDelivery(delivery.id)}
+                      onClick={() => acceptDelivery(delivery.id)}
                       className="w-full bg-blue-600 hover:bg-blue-700"
                     >
                       Accept Delivery

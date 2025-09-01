@@ -14,12 +14,14 @@ class Authenticate {
     driver_id: string | null,
     family_name: string,
     name: string,
+    delivery_id: string,
     email: string
   ): void => {
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
     localStorage.setItem("user_id", user_id);
     localStorage.setItem("first_name", family_name);
+    localStorage.setItem("delivery_id", delivery_id);
     localStorage.setItem("user_name", name);
     if (email) localStorage.setItem("user_mail", email);
 
