@@ -12,39 +12,95 @@ const DriverLogin = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  // const handleGoogleLoginSuccess = async (credentialResponse: any) => {
+  //   const idToken = credentialResponse.credential;
+
+  //   try {
+  //     setIsLoading(true);
+  //     setErrorMessage("");
+
+  //     const response = await axios.post("https://ziplugs.geniusexcel.tech/auth/google", {
+  //       oauth_provider: "google",
+  //       user_type: "customer",
+  //       google_id_token: idToken,
+  //     });
+      
+  //     const {
+  //       id: driver_id,
+  //       email,
+  //       first_name,
+  //       last_name,
+  //       profile_image,
+  //       access_token: accessToken,
+  //       refresh_token: refreshToken,
+  //     } = response.data.data;
+
+  //     if (!driver_id) throw new Error("User ID not received from server");
+  //     if (!accessToken) throw new Error("Access token not received from server");
+
+  //     const isNewDriver = response.data["is_new_driver"] ?? false;
+      
+  //     navigate(isNewDriver ? "/document-upload" : "/deliveries");
+    
+  //     console.log("Driver status:", isNewDriver ? "New" : "Existing");
+
+  //     auth.storeTokens(
+  //       accessToken,
+  //       refreshToken || "",
+  //       null, // user_id
+  //       driver_id,
+  //       email,
+  //       `${first_name} ${last_name}`,
+  //       profile_image
+  //     );
+
+
+  //   } catch (error) {
+  //     console.error("Google Login Error:", error);
+  //     setErrorMessage("Failed to sign in with Google. Please try again.");
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
   const handleGoogleLoginSuccess = async (credentialResponse: any) => {
-    const idToken = credentialResponse.credential;
+  const idToken = credentialResponse.credential;
+
+  try {
+    setIsLoading(true);
+    setErrorMessage("");
+
+    console.log("Starting Google login process...");
+
+    const response = await axios.post("https://ziplugs.geniusexcel.tech/auth/google", {
+      oauth_provider: "google",
+      user_type: "customer",
+      google_id_token: idToken,
+    });
+    
+    console.log("Login response:", response.data);
+
+    const {
+      id: driver_id,
+      email,
+      first_name,
+      last_name,
+      profile_image,
+      access_token: accessToken,
+      refresh_token: refreshToken,
+    } = response.data.data;
+
+    // Validate required data
+    if (!driver_id) throw new Error("User ID not received from server");
+    if (!accessToken) throw new Error("Access token not received from server");
+
+    // Check if this is a new driver
+    const isNewDriver = response.data["is_new_driver"] ?? false;
+    console.log("Driver status:", isNewDriver ? "New driver" : "Existing driver");
 
     try {
-      setIsLoading(true);
-      setErrorMessage("");
-
-      const response = await axios.post("https://ziplugs.geniusexcel.tech/auth/google", {
-        oauth_provider: "google",
-        user_type: "customer",
-        google_id_token: idToken,
-      });
-      
-      const {
-        id: driver_id,
-        email,
-        first_name,
-        last_name,
-        profile_image,
-        access_token: accessToken,
-        refresh_token: refreshToken,
-      } = response.data.data;
-
-      if (!driver_id) throw new Error("User ID not received from server");
-      if (!accessToken) throw new Error("Access token not received from server");
-
-      const isNewDriver = response.data["is_new_driver"] ?? false;
-      
-      navigate(isNewDriver ? "/document-upload" : "/deliveries");
-    
-      console.log("Driver status:", isNewDriver ? "New" : "Existing");
-
-      auth.storeTokens(
+      // Store tokens using auth utility
+      await auth.storeTokens(
         accessToken,
         refreshToken || "",
         null, // user_id
@@ -54,12 +110,66 @@ const DriverLogin = () => {
         profile_image
       );
 
+      // Ensure accessToken is stored with the standard key name
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("driver_id", driver_id);
+      
+      if (refreshToken) {
+        localStorage.setItem("refreshToken", refreshToken);
+      }
 
-    } catch (error) {
-      console.error("Google Login Error:", error);
-      setErrorMessage("Failed to sign in with Google. Please try again.");
-    } finally {
-      setIsLoading(false);
+      console.log("All tokens stored successfully with accessToken key");
+      
+      // Verify tokens were stored
+      const storedToken = localStorage.getItem("accessToken");
+      const storedDriverId = localStorage.getItem("driver_id");
+      
+      if (!storedToken || !storedDriverId) {
+        throw new Error("Failed to verify stored authentication data");
+      }
+      
+      console.log("Token verification successful");
+      
+      // Add a small delay to ensure all storage operations are complete
+      await new Promise(resolve => setTimeout(resolve, 200));
+      
+      // Navigate AFTER successful token storage and verification
+      const targetRoute = isNewDriver ? "/document-upload" : "/deliveries";
+      console.log("Navigating to:", targetRoute);
+      
+      navigate(targetRoute, { 
+        replace: true // Use replace to prevent back button issues
+      });
+      
+    } catch (tokenError) {
+      console.error("Token storage failed:", tokenError);
+      throw new Error("Failed to store authentication data");
+    }
+
+  } catch (error) {
+    console.error("Google Login Error:", error);
+    
+    let errorMessage = "Failed to sign in with Google. Please try again.";
+  
+    if (error instanceof Error) {
+      if (error.message.includes("Network Error")) {
+        errorMessage = "Network connection failed. Please check your internet and try again.";
+      } else if (error.message.includes("User ID not received")) {
+        errorMessage = "Authentication failed. Please try signing in again.";
+      } else if (error.message.includes("Access token not received")) {
+        errorMessage = "Authentication failed. Please try signing in again.";
+      } else if (error.message.includes("store authentication")) {
+        errorMessage = "Failed to save login data. Please try again.";
+      } else {
+        errorMessage = error.message;
+      }
+    } else if (typeof error === 'string') {
+      errorMessage = error;
+    }
+    
+    setErrorMessage(errorMessage);
+  } finally {
+    setIsLoading(false);
     }
   };
   const handleGoogleLoginError = (error: unknown) => { 
