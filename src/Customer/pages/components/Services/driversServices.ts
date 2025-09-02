@@ -68,23 +68,24 @@ export const fetchNearbyDrivers = async (): Promise<Driver[]> => {
     }
 
     // Transform the data to match expected Driver interface
-    const transformedDrivers = json.data.map((driver: any, index: number) => {
-      console.log(`Driver ${index}:`, driver);
-      
-      return {
-        id: driver.id || `driver-${index}`,
-        name: driver.name || driver.full_name || driver.driver_name || "Unknown Driver",
-        vehicle: driver.vehicle || driver.vehicle_type || driver.car_model || "Unknown Vehicle",
-        profile_image: driver.profile_image || driver.profile_picture || driver.avatar || 
-                    `https://ui-avatars.com/api/?name=${encodeURIComponent(driver.name || 'Driver')}&background=777&color=fff`,
-        rating: driver.rating || driver.driver_rating || 4.5,
-        eta_minutes: driver.eta_minutes || driver.eta || driver.estimated_time || 5,
-        distance_km: driver.distance_km || driver.distance || driver.distance_in_km || 1.5,
-        phone: driver.phone || driver.phone_number || driver.contact || "",
-        // Add any other fields that might be in the API response
-        ...driver
-      };
-    });
+  const transformedDrivers = json.data.map((driver: any, index: number) => {
+    // Merge first_name and last_name
+    const firstName = driver.first_name || driver.firstName || '';
+    const lastName = driver.last_name || driver.lastName || '';
+    const fullName = `${firstName} ${lastName}`.trim() || driver.name || "Unknown Driver";
+    
+    return {
+      id: driver.id || `driver-${index}`,
+      name: fullName, // This is now the merged name
+      vehicle: driver.vehicle || "Unknown Vehicle",
+      profile_pic: driver.profile_pic || 
+                  `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=777&color=fff`,
+      rating: driver.rating || 4.5,
+      eta_minutes: driver.eta_minutes || 5,
+      distance_km: driver.distance_km || 1.5,
+      phone: driver.phone || "",
+    };
+  });
 
     console.log("Transformed drivers:", transformedDrivers);
     return transformedDrivers;
