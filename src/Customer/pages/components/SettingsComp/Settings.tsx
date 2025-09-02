@@ -25,10 +25,10 @@ const Settings = () => {
   const [success, setSuccess] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [profile, setProfile] = useState({
-    full_name: "",
+    full_name: localStorage.getItem("user_name") || "",
     phone_number: "",
     email: "",
-    profile_picture: "",
+    profile_image: "",
   });
   const [previewImage, setPreviewImage] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -69,7 +69,7 @@ const Settings = () => {
             response.data.full_name || localStorage.getItem("user_name") || "",
           phone_number: response.data.phone_number || "",
           email: response.data.email || userEmail || "",
-          profile_picture: response.data.profile_picture || googlePicture || "",
+          profile_image: response.data.profile_image || googlePicture || "",
         });
 
         setError(""); // Clear any previous errors
@@ -93,10 +93,10 @@ const Settings = () => {
         }
 
         setProfile({
-          full_name: localStorage.getItem("user_name") || "",
+          full_name: `{firstName} {lastName}`.trim() || "",
           phone_number: "",
           email: userEmail || "",
-          profile_picture: googlePicture || "",
+          profile_image: googlePicture || "",
         });
       } finally {
         setIsLoading(false);
@@ -165,10 +165,11 @@ const Settings = () => {
     setError("");
     setSuccess("");
 
+
     const sendData = {
       full_name: profile.full_name,
       phone_number: profile.phone_number,
-      profile_picture: profile.profile_picture,
+      profile_picture: profile.profile_image,
     };
 
     try {
@@ -184,8 +185,8 @@ const Settings = () => {
       );
 
       // Update localStorage with new data
-      if (profile.profile_picture) {
-        localStorage.setItem("user_picture", profile.profile_picture);
+      if (profile.profile_image) {
+        localStorage.setItem("user_picture", profile.profile_image);
       }
       if (profile.full_name) {
         localStorage.setItem("user_name", profile.full_name);
@@ -226,11 +227,11 @@ const Settings = () => {
       full_name: localStorage.getItem("user_name") || "",
       phone_number: profile.phone_number, // Keep the current phone number
       email: userEmail || "",
-      profile_picture: googlePicture || "",
+      profile_image: googlePicture || "",
     });
   };
 
-  const currentProfilePicture = previewImage || profile.profile_picture;
+  const currentProfilePicture = previewImage || profile.profile_image;
 
   // Show loading state during initial fetch
   if (isLoading && !profile.email && !profile.full_name) {
