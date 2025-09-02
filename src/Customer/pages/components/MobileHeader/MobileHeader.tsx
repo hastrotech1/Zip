@@ -17,7 +17,7 @@ const MobileMenu = () => {
   const [userInfo, setUserInfo] = useState({
     name: "",
     email: "",
-    picture: "",
+    profile_image: "",
   });
 
   useEffect(() => {
@@ -29,7 +29,7 @@ const MobileMenu = () => {
     setUserInfo({
       name: firstName,
       email: userMail,
-      picture: userPicture,
+      profile_image: userPicture,
     });
   }, []);
 
@@ -92,9 +92,9 @@ const MobileMenu = () => {
           <div className="flex items-center space-x-4">
             {/* Profile Picture */}
             <div className="w-16 h-16 rounded-full overflow-hidden border-3 border-white shadow-lg flex-shrink-0">
-              {userInfo.picture ? (
+              {userInfo.profile_image ? (
                 <img
-                  src={userInfo.picture}
+                  src={userInfo.profile_image}
                   alt="Profile"
                   className="w-full h-full object-cover"
                 />
