@@ -308,8 +308,8 @@ const DriverLogin = () => {
       if (!accessToken) throw new Error("Access token not received from server");
 
       // Check if this is a new driver
-      const isNewDriver = response.data["is_new_driver"] ?? false;
-      console.log("Driver status:", isNewDriver ? "New driver" : "Existing driver");
+      const driverCreated = response.data["driver_created"] ?? false;
+      console.log("Driver status:", driverCreated ? "New driver (created)" : "Existing driver");
 
       try {
         // Fixed: Match the auth.storeTokens method signature
@@ -348,8 +348,8 @@ const DriverLogin = () => {
         await new Promise(resolve => setTimeout(resolve, 200));
         
         // Navigate AFTER successful token storage and verification
-        const targetRoute = isNewDriver ? "/document-upload" : "/deliveries";
-        console.log("Navigating to:", targetRoute);
+        const targetRoute = driverCreated ? "/document-upload" : "/deliveries";
+        console.log("Navigating to:", targetRoute, "(driver_created:", driverCreated + ")");
         
         navigate(targetRoute, { 
           replace: true
