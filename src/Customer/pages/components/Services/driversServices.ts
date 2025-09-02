@@ -78,7 +78,7 @@ export const fetchNearbyDrivers = async (): Promise<Driver[]> => {
       id: driver.id || `driver-${index}`,
       name: fullName, // This is now the merged name
       vehicle: driver.vehicle || "Unknown Vehicle",
-      profile_pic: driver.profile_pic || 
+      profile_image: driver.profile_image || 
                   `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName)}&background=777&color=fff`,
       rating: driver.rating || 4.5,
       eta_minutes: driver.eta_minutes || 5,
