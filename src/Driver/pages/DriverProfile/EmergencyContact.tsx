@@ -82,12 +82,12 @@ const EmergencyContact: React.FC = () => {
       setIsSubmitting(true);
       setError(null);
 
-      const token = localStorage.getItem("access_token");
+      const token = localStorage.getItem("accessToken");
       const response = await fetch(URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token || ""}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(payload),
       });
