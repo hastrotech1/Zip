@@ -308,7 +308,7 @@ const DriverLogin = () => {
       if (!accessToken) throw new Error("Access token not received from server");
 
       // Check if this is a new driver
-      const driverCreated = response.data["driver_created"] ?? false;
+      const driverCreated = response.data["created"] ?? false;
       console.log("Driver status:", driverCreated ? "New driver (created)" : "Existing driver");
 
       try {
