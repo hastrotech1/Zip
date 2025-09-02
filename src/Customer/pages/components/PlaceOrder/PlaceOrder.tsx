@@ -82,19 +82,6 @@ export default function PlaceOrderPage() {
     }
   };
 
-  // useEffect(() => {
-  //   getVehicles().then((vehicles) => {
-  //     setBackendVehicles(
-  //       vehicles.map((v) => ({
-  //         id: v.id,
-  //         name: v.name,
-  //         price: v.price,
-  //         image: vehicleImageByName(v.name),
-  //       }))
-  //     );
-  //   });
-  // }, []);
-
     useEffect(() => {
     const loadVehicles = async () => {
       try {
@@ -433,7 +420,7 @@ function DriverRow({ d, onSelect }: { d: Driver; onSelect: () => void }) {
       className="flex items-center gap-3 border border-gray-200 rounded-lg p-3 hover:bg-gray-50 cursor-pointer"
     >
       <img
-        src={d.profile_pic}
+        src={d.profile_image}
         onError={(e) =>
           (e.currentTarget.src =
             "https://ui-avatars.com/api/?name=Driver&background=777&color=fff")
@@ -460,7 +447,7 @@ function SelectedDriverCard({ d }: { d: Driver }) {
   return (
     <div className="flex items-center gap-3 mb-4">
       <img
-        src={d.profile_pic}
+        src={d.profile_image}
         alt={d.name}
         className="w-16 h-16 rounded-full shrink-0"
       />

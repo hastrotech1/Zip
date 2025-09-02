@@ -25,7 +25,7 @@ export async function createShipment(params: {
   estimate_fee: number;
   selected_vehicle: string;
 }) {
-  const token = localStorage.getItem("access_token");
+  const token = localStorage.getItem("accessToken");
   if (!token) throw new Error("No access token found");
 
   const response = await axios.post(

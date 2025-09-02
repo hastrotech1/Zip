@@ -24,7 +24,7 @@ export interface Driver {
   eta_minutes: number;
   distance_km: number;
   rating: number;
-  profile_pic: string;
+  profile_image: string;
   phone: string;
 }
 

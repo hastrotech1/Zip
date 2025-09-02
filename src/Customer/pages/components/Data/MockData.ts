@@ -9,7 +9,7 @@ export const mockDrivers: Driver[] = [
     distance_km: 4.4,
     rating: 3.8,
     phone: "+2349015550123",
-    profile_pic:
+    profile_image:
       "https://ui-avatars.com/api/?name=Adam+Wale&background=3B82F6&color=fff",
   },
   {
@@ -20,7 +20,7 @@ export const mockDrivers: Driver[] = [
     distance_km: 4.4,
     rating: 3.8,
     phone: "+2349015550123",
-    profile_pic:
+    profile_image:
       "https://ui-avatars.com/api/?name=Adam+Wale&background=3B82F6&color=fff",
   },
   {
@@ -31,7 +31,7 @@ export const mockDrivers: Driver[] = [
     distance_km: 4.4,
     rating: 3.8,
     phone: "+2349015550123",
-    profile_pic:
+    profile_image:
       "https://ui-avatars.com/api/?name=Adam+Wale&background=3B82F6&color=fff",
   },
   {
@@ -42,7 +42,7 @@ export const mockDrivers: Driver[] = [
     distance_km: 4.4,
     rating: 3.8,
     phone: "+2349015550123",
-    profile_pic:
+    profile_image:
       "https://ui-avatars.com/api/?name=Adam+Wale&background=3B82F6&color=fff",
   },
   {
@@ -53,7 +53,7 @@ export const mockDrivers: Driver[] = [
     distance_km: 4.4,
     rating: 3.8,
     phone: "+2349015550123",
-    profile_pic:
+    profile_image:
       "https://ui-avatars.com/api/?name=Adam+Wale&background=3B82F6&color=fff",
   },
   {
@@ -64,7 +64,7 @@ export const mockDrivers: Driver[] = [
     distance_km: 4.4,
     rating: 3.8,
     phone: "+2349015550123",
-    profile_pic:
+    profile_image:
       "https://ui-avatars.com/api/?name=Adam+Wale&background=3B82F6&color=fff",
   },
   {
@@ -75,7 +75,7 @@ export const mockDrivers: Driver[] = [
     distance_km: 4.4,
     rating: 3.8,
     phone: "+2349015550123",
-    profile_pic:
+    profile_image:
       "https://ui-avatars.com/api/?name=Adam+Wale&background=3B82F6&color=fff",
   },
   // ... other drivers
