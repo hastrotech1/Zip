@@ -82,20 +82,42 @@ const EmergencyContact: React.FC = () => {
       setIsSubmitting(true);
       setError(null);
 
+      // Get and validate token
       const token = localStorage.getItem("accessToken");
+      
+      // Debug token
+      console.log("Token exists:", !!token);
+      console.log("Token preview:", token ? token.substring(0, 20) + "..." : "No token");
+      
+      if (!token || token.trim() === "") {
+        setError("Not authenticated. Please log in again.");
+        navigate("/driver-login");
+        return;
+      }
+
+      // Clean the token (remove any existing "Bearer " prefix and trim whitespace)
+      const cleanToken = token.replace(/^Bearer\s+/i, "").trim();
+      
+      console.log("Making API call to:", URL);
+      console.log("Payload:", payload);
+
       const response = await fetch(URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${cleanToken}`,
         },
         body: JSON.stringify(payload),
       });
 
+      console.log("Response status:", response.status);
+      console.log("Response headers:", Object.fromEntries(response.headers.entries()));
+
       if (!response.ok) {
         const errorData = await response.json();
+        console.error("Error response:", errorData);
         throw new Error(
-          errorData.message || `Update failed with status: ${response.status}`
+          errorData.detail || errorData.message || `Update failed with status: ${response.status}`
         );
       }
 
@@ -103,10 +125,23 @@ const EmergencyContact: React.FC = () => {
       console.log("Update successful", responseData);
       navigate("/driver-dashboard");
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "An unexpected error occurred";
+      console.error("Full error object:", error);
+      
+      let errorMessage = "An unexpected error occurred";
+      
+      if (error instanceof Error) {
+        if (error.message.includes("NetworkError") || error.message.includes("Failed to fetch")) {
+          errorMessage = "Network connection failed. Please check your internet and try again.";
+        } else if (error.message.includes("401")) {
+          errorMessage = "Authentication failed. Please log in again.";
+          navigate("/driver-login");
+          return;
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
       setError(errorMessage);
-      console.error("Update failed:", errorMessage);
     } finally {
       setIsSubmitting(false);
     }
