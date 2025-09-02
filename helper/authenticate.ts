@@ -1,11 +1,14 @@
 // This file handles authentication and token management for the application.
+
+// import { profile } from "console";
+
 // It includes methods for storing tokens, making API calls with token refresh logic, and handling logout
 interface RefreshTokenResponse {
   accessToken: string;
 }
 
 class Authenticate {
-  private baseUrl = "https://ziplogistics.pythonanywhere.com"; // Add your base URL
+  private baseUrl = "https://ziplugs.geniusexcel.tech";
 
   storeTokens = (
     accessToken: string,
@@ -15,7 +18,8 @@ class Authenticate {
     family_name: string,
     name: string,
     delivery_id: string,
-    email: string
+    email: string,
+    profile_image: string | null
   ): void => {
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
@@ -23,6 +27,7 @@ class Authenticate {
     localStorage.setItem("first_name", family_name);
     localStorage.setItem("delivery_id", delivery_id);
     localStorage.setItem("user_name", name);
+    localStorage.setItem("profile_image", profile_image || "");
     if (email) localStorage.setItem("user_mail", email);
 
     if (driver_id) localStorage.setItem("driver_id", driver_id);
@@ -33,7 +38,6 @@ class Authenticate {
     options: RequestInit,
     retryCount = 1
   ): Promise<Response> => {
-    // Changed return type to Response
     const accessToken = localStorage.getItem("accessToken");
 
     try {
