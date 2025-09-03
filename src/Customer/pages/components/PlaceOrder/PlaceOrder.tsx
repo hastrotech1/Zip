@@ -21,7 +21,7 @@ import {createShipment} from "../../../../../helper/createShipment"
 import { handlePaystackPayment } from "../Services/paymentService";
 import { fetchNearbyDrivers, selectDriverForOrder } from "../Services/driversServices";
 import { useMapbox } from "../../../../hooks/useMapbox";
-import Navbar from "../MobileHeader/navBar";
+import MobileMenu from "../MobileHeader/MobileHeader";
 
 /* ----------------------------------------------------------------- */
 /* MAIN COMPONENT -------------------------------------------------- */
@@ -196,8 +196,11 @@ export default function PlaceOrderPage() {
     (receiverSelf || isValidNGPhone(receiverPhone || ""));
   return (
     <div className="relative h-screen w-full overflow-hidden bg-gray-100 max-auto">
-      <div ref={mapWrap} className="absolute inset-0 z-0" />
-      <Navbar pageName="place-order" />
+      <div className="fixed top-4 left-4 z-50">
+        <MobileMenu floating />
+      </div>
+      <div ref={mapWrap} className="absolute inset-0 z-0 p-0" />
+      
 
       {/* bottom sheet */}
       <div className="absolute bottom-0 w-full z-10 bg-white rounded-t-3xl shadow-2xl max-h-[70vh] overflow-y-auto touch-auto">

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Menu,
   X,
@@ -12,7 +12,11 @@ import {
   LayoutList as ListOrdered,
 } from "lucide-react";
 
-const MobileMenu = () => {
+interface MobileMenuProps {
+  floating?: boolean;
+}
+
+const MobileMenu: React.FC<MobileMenuProps> = ({ floating = false }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [userInfo, setUserInfo] = useState({
     name: "",
@@ -60,7 +64,7 @@ const MobileMenu = () => {
   ];
 
   return (
-    <>
+    <div className={floating ? "fixed top-4 left-4 z-50" : ""}>
       {/* Menu Button */}
       <button
         onClick={toggleMenu}
@@ -147,7 +151,7 @@ const MobileMenu = () => {
           </button>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
