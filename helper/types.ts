@@ -35,10 +35,3 @@ export interface Suggest {
 }
 
 export type ViewState = "form" | "drivers" | "selected";
-
-export interface BackendVehicle {
-  id: string;
-  name: string;
-  description: string | null;
-  price: number;
-}
