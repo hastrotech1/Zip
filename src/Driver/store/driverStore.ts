@@ -116,16 +116,30 @@ export const useDriverStore = create<DriverStore>((set, get) => ({
   },
 
   fetchAvailableDeliveries: async () => {
-    try {
-      const token = localStorage.getItem("accessToken");
-      const res = await axios.get("https://ziplugs.geniusexcel.tech/api/driver-delivery-management", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const normalized = res.data.data.map(normalizeDelivery);
-      set({ availableDeliveries: normalized });
-    } catch (err) {
-      console.error("Failed to fetch available deliveries:", err);
-    }
+    const response = await fetch('/api/driver-delivery-management');
+    const result = await response.json();
+
+    // Map API data to UI structure
+    const deliveries = result.data.map((item: any) => ({
+      id: item.id,
+      customer: {
+        name: `${item.shipment_info.customer.first_name} ${item.shipment_info.customer.last_name}`,
+        phone: item.shipment_info.customer.phone_number,
+        profilePicture: item.shipment_info.customer.profile_image,
+      },
+      estimatedTime: new Date(item.shipment_info.created_at).toLocaleString(), // or any logic for ETA
+      package: {
+        description: `Order #${item.shipment_info.order_number} - Fee: $${item.shipment_info.estimate_fee}`,
+      },
+      pickup: {
+        address: item.shipment_info.pickup_location,
+      },
+      delivery: {
+        address: item.shipment_info.delivery_location,
+      },
+    }));
+
+    set({ availableDeliveries: deliveries });
   },
 
   fetchMyDeliveries: async () => {
