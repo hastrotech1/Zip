@@ -69,13 +69,13 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ floating = false }) => {
       <button
         onClick={toggleMenu}
         aria-label={isOpen ? "Close menu" : "Open menu"}
-        className="p-2 rounded-lg hover:bg-white/10 focus:outline-none"
+        className={`p-2 rounded-lg transition ${
+          floating
+            ? "bg-[#0a1172] text-white shadow-lg hover:bg-[#1e3a8a]"
+            : "text-white hover:bg-white/10"
+        }`}
       >
-        {isOpen ? (
-          <X className="w-6 h-6 text-white" />
-        ) : (
-          <Menu className="w-6 h-6 text-white" />
-        )}
+        {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
       </button>
 
       {/* Overlay */}
