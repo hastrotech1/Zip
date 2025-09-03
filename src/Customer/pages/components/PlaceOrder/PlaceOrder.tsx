@@ -196,7 +196,7 @@ export default function PlaceOrderPage() {
     (receiverSelf || isValidNGPhone(receiverPhone || ""));
   return (
     <div className="relative h-screen w-full overflow-hidden bg-gray-100 max-auto">
-      <div className="fixed top-4 left-4 z-50">
+      <div className="fixed top-4 left-4 z-50 bg[#0a1172] border-2">
         <MobileMenu floating />
       </div>
       <div ref={mapWrap} className="absolute inset-0 z-0 p-0" />
