@@ -150,7 +150,7 @@ const Settings = () => {
       {/* ...sidebar + headers... */}
       <Navbar pageName="Settings" />
 
-      <main className="flex-1 p-14">
+      <main className="flex-1 p-4 md:p-14 mt-16 md:mt-0">
 
         {error && (
           <Alert variant="destructive" className="mb-4">

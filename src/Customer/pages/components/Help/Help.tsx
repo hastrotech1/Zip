@@ -106,7 +106,8 @@ const Help = () => {
 
         <Navbar pageName="Help" />
 
-        <div className="p-14 md:p-0">
+        {/* Add top margin to avoid overlap with navbar */}
+        <div className="p-4 md:p-0 mt-16 md:mt-0">
           <Card className="mb-6 bg-blue-50">
             <CardHeader>
               <CardTitle className="text-2xl font-bold">

@@ -185,7 +185,7 @@ const Notifications: React.FC = () => {
       <Navbar pageName="Notifications" />
 
       {/* Main Content */}
-      <main className="flex-1 w-full md:ml-64 p-14">
+      <main className="flex-1 w-full md:ml-64 p-4 md:p-14 mt-16 md:mt-0">
         {/* Desktop Header */}
         <div className="hidden md:block md:px-8 md:py-5">
           <ProfileHeader

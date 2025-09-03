@@ -196,15 +196,15 @@ export default function PlaceOrderPage() {
     (receiverSelf || isValidNGPhone(receiverPhone || ""));
   return (
     <div className="relative h-screen w-full overflow-hidden bg-gray-100 max-auto">
-      <div className="fixed top-4 left-4 z-50 bg[#0a1172] border-2">
+      {/* Floating menu button */}
+      <div className="fixed top-4 left-4 z-50">
         <MobileMenu floating />
       </div>
-      <div ref={mapWrap} className="absolute inset-0 z-0 p-0" />
-      
-
+      {/* Add top padding so content isn't hidden under the menu button */}
+      <div ref={mapWrap} className="absolute inset-0 z-0 p-0 pt-20 md:pt-0" />
       {/* bottom sheet */}
       <div className="absolute bottom-0 w-full z-10 bg-white rounded-t-3xl shadow-2xl max-h-[70vh] overflow-y-auto touch-auto">
-        <div className="p-4 space-y-4">
+        <div className="p-4 md:p-8 space-y-4">
           {view === "form" && (
             <>
               {/* VEHICLES */}

@@ -49,7 +49,7 @@ const Navbar: React.FC<NavbarProps> = ({ pageName }) => {
   // all other pages: full navbar
   return (
     <nav className="fixed top-0 left-0 w-full bg-[#0a1172] text-white shadow-md z-50">
-      <div className="relative flex items-center justify-center px-4 py-3">
+      <div className="relative flex items-center justify-center px-4 py-3 min-h-[56px]">
         {/* Menu button */}
         <div className="absolute left-4">
           <MobileMenu />
