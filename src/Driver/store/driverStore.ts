@@ -116,7 +116,7 @@ export const useDriverStore = create<DriverStore>((set, get) => ({
   },
 
   fetchAvailableDeliveries: async () => {
-    const response = await fetch('/api/driver-delivery-management');
+    const response = await fetch('https://ziplugs.geniusexcel.tech/api/driver-delivery-management');
     const result = await response.json();
 
     // Map API data to UI structure
