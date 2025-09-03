@@ -116,9 +116,6 @@ export const useDriverStore = create<DriverStore>((set, get) => ({
   },
 
   fetchAvailableDeliveries: async () => {
-    // const response = await fetch('https://ziplugs.geniusexcel.tech/api/driver-delivery-management');
-    // const result = await response.json();
-
     const token = localStorage.getItem('accessToken');
     const response = await fetch('https://ziplugs.geniusexcel.tech/api/driver-delivery-management', {
       headers: {
@@ -129,25 +126,28 @@ export const useDriverStore = create<DriverStore>((set, get) => ({
 
     const result = await response.json();
 
-    // Map API data to UI structure
-    const deliveries = result.data.map((item: any) => ({
-      id: item.id,
-      customer: {
-        name: `${item.shipment_info.customer.first_name} ${item.shipment_info.customer.last_name}`,
-        phone: item.shipment_info.customer.phone_number,
-        profilePicture: item.shipment_info.customer.profile_image,
-      },
-      estimatedTime: new Date(item.shipment_info.created_at).toLocaleString(), // or any logic for ETA
-      package: {
-        description: `Order #${item.shipment_info.order_number} - Fee: $${item.shipment_info.estimate_fee}`,
-      },
-      pickup: {
-        address: item.shipment_info.pickup_location,
-      },
-      delivery: {
-        address: item.shipment_info.delivery_location,
-      },
-    }));
+    // Filter for pending deliveries only
+    const deliveries = result.data
+      .filter((item: any) => item.status === "pending")
+      .map((item: any) => ({
+        id: item.id,
+        customer: {
+          name: `${item.shipment_info.customer.first_name} ${item.shipment_info.customer.last_name}`,
+          phone: item.shipment_info.customer.phone_number,
+          profilePicture: item.shipment_info.customer.profile_image,
+        },
+        estimatedTime: new Date(item.shipment_info.created_at).toLocaleString(),
+        package: {
+          description: `Order #${item.shipment_info.order_number} - Fee: $${item.shipment_info.estimate_fee}`,
+        },
+        pickup: {
+          address: item.shipment_info.pickup_location,
+        },
+        delivery: {
+          address: item.shipment_info.delivery_location,
+        },
+        status: item.status,
+      }));
 
     set({ availableDeliveries: deliveries });
   },
