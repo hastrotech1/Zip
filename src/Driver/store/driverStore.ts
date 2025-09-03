@@ -116,7 +116,17 @@ export const useDriverStore = create<DriverStore>((set, get) => ({
   },
 
   fetchAvailableDeliveries: async () => {
-    const response = await fetch('https://ziplugs.geniusexcel.tech/api/driver-delivery-management');
+    // const response = await fetch('https://ziplugs.geniusexcel.tech/api/driver-delivery-management');
+    // const result = await response.json();
+
+    const token = localStorage.getItem('accessToken');
+    const response = await fetch('https://ziplugs.geniusexcel.tech/api/driver-delivery-management', {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
     const result = await response.json();
 
     // Map API data to UI structure
