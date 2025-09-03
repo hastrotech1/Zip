@@ -19,7 +19,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import MobileHeader from "@/Customer/components/Header/MobileHeader";
+import Navbar from "../MobileHeader/navBar";
 
 const OrderHistory = () => {
   const [orderHistory, setOrderHistory] = useState<ShipmentData[]>([]);
@@ -230,9 +230,7 @@ const OrderHistory = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="md:hidden">
-        <MobileHeader />        
-      </div>
+      <Navbar pageName="Order History" />
       <div className="max-w-6xl mx-auto p-4 sm:p-6 space-y-6">
         {/* Error Banner */}
         {error && (

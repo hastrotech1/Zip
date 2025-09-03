@@ -21,7 +21,11 @@ import {createShipment} from "../../../../../helper/createShipment"
 import { handlePaystackPayment } from "../Services/paymentService";
 import { fetchNearbyDrivers, selectDriverForOrder } from "../Services/driversServices";
 import { useMapbox } from "../../../../hooks/useMapbox";
-import MobileHeader from "../MobileHeader/MobileHeader";
+import Navbar from "../MobileHeader/navBar";
+
+/* ----------------------------------------------------------------- */
+/* MAIN COMPONENT -------------------------------------------------- */
+/* ----------------------------------------------------------------- */
 
 export default function PlaceOrderPage() {
   const [view, setView] = useState<ViewState>("form");
@@ -193,7 +197,7 @@ export default function PlaceOrderPage() {
   return (
     <div className="relative h-screen w-full overflow-hidden bg-gray-100 max-auto">
       <div ref={mapWrap} className="absolute inset-0 z-0" />
-      <MobileHeader />
+      <Navbar pageName="place-order" />
 
       {/* bottom sheet */}
       <div className="absolute bottom-0 w-full z-10 bg-white rounded-t-3xl shadow-2xl max-h-[70vh] overflow-y-auto touch-auto">

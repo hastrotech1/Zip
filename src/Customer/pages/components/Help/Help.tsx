@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import SideBar from "../sideNav/SideBar";
 import ProfileHeader from "../ProfileHeader/ProfileHeader";
-import MobileHeader from "../MobileHeader/MobileHeader";
+import Navbar from "../MobileHeader/navBar";
 import { HelpCircle, MessageCircle, ArrowRight } from "lucide-react";
 import {
   Card,
@@ -104,11 +104,9 @@ const Help = () => {
           />
         </div>
 
-        <div className="md:hidden">
-          <MobileHeader />
-        </div>
+        <Navbar pageName="Help" />
 
-        <div className="p-5 md:p-0">
+        <div className="p-14 md:p-0">
           <Card className="mb-6 bg-blue-50">
             <CardHeader>
               <CardTitle className="text-2xl font-bold">

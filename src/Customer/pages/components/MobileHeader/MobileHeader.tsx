@@ -24,7 +24,7 @@ const MobileMenu = () => {
     // Get user info from localStorage
     const firstName = localStorage.getItem("first_name") || "";
     const userMail = localStorage.getItem("user_mail") || "";
-    const userPicture = localStorage.getItem("user_picture") || "";
+    const userPicture = localStorage.getItem("profile_image") || "";
 
     setUserInfo({
       name: firstName,
@@ -64,7 +64,8 @@ const MobileMenu = () => {
       {/* Menu Button */}
       <button
         onClick={toggleMenu}
-        className="fixed top-4 left-4 z-50 p-3 bg-[#0a1172] hover:bg-[#1e3a8a] rounded-lg shadow-lg transition-all duration-200 transform hover:scale-105"
+        aria-label={isOpen ? "Close menu" : "Open menu"}
+        className="p-2 rounded-lg hover:bg-white/10 focus:outline-none"
       >
         {isOpen ? (
           <X className="w-6 h-6 text-white" />

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ProfileHeader from "../ProfileHeader/ProfileHeader";
 import SideBar from "../sideNav/SideBar";
-import MobileHeader from "../MobileHeader/MobileHeader";
+import Navbar from "../MobileHeader/navBar";
 import { Bell, AlertTriangle, CheckCircle } from "lucide-react";
 import {
   Card,
@@ -182,12 +182,10 @@ const Notifications: React.FC = () => {
       <div className="fixed hidden md:block z-10">
         <SideBar />
       </div>
-      <div className="md:hidden mb-20">
-        <MobileHeader />
-      </div>
+      <Navbar pageName="Notifications" />
 
       {/* Main Content */}
-      <main className="flex-1 w-full md:ml-64">
+      <main className="flex-1 w-full md:ml-64 p-14">
         {/* Desktop Header */}
         <div className="hidden md:block md:px-8 md:py-5">
           <ProfileHeader
