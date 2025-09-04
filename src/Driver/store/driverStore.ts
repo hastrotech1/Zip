@@ -27,6 +27,7 @@ export interface Driver {
   email: string;
   phone: string;
   isOnline: boolean;
+  profile_image?: string;
   rating: number;
   completedDeliveries: number;
   vehicle: {

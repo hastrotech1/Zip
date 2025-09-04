@@ -27,6 +27,7 @@ export const Setting = () => {
   };
 
   const handleLogout = () => {
+    // TODO: Add logout logic (clear tokens, redirect, etc.)
     toast({
       title: "Logged out successfully",
       description: "You have been logged out of the driver app",
@@ -40,12 +41,34 @@ export const Setting = () => {
       <main className="pt-20 pb-6 px-4">
         <div className="max-w-3xl mx-auto space-y-6">
           <div className="space-y-6">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
-              <p className="text-gray-600">
-                Manage your preferences and account settings
-              </p>
-            </div>
+            {/* Driver Profile Info */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <span>Driver Profile</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center space-x-4">
+                  <img
+                    src={driver?.documents?.id?.verified ? driver?.profile_image ?? "/default-avatar.png" : "/default-avatar.png"}
+                    alt="Profile"
+                    className="w-16 h-16 rounded-full"
+                  />
+                  <div>
+                    <div className="font-bold text-lg">{driver?.name}</div>
+                    <div className="text-gray-600">{driver?.email}</div>
+                    <div className="text-gray-600">{driver?.phone}</div>
+                    <div className="text-gray-600">
+                      Vehicle: {driver?.vehicle?.type} {driver?.vehicle?.model} ({driver?.vehicle?.plateNumber})
+                    </div>
+                    <div className="text-gray-600">
+                      Rating: {driver?.rating} | Completed: {driver?.completedDeliveries}
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
             {/* Availability Status */}
             <Card>
@@ -102,7 +125,6 @@ export const Setting = () => {
                   </div>
                   <Switch defaultChecked />
                 </div>
-
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-medium">Earnings Updates</p>
@@ -112,7 +134,6 @@ export const Setting = () => {
                   </div>
                   <Switch defaultChecked />
                 </div>
-
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-medium">App Updates</p>
@@ -138,16 +159,13 @@ export const Setting = () => {
                   <Shield className="w-4 h-4 mr-2" />
                   Change Password
                 </Button>
-
                 <Button variant="outline" className="w-full justify-start">
                   <Bell className="w-4 h-4 mr-2" />
                   Notification Preferences
                 </Button>
-
                 <Button variant="outline" className="w-full justify-start">
                   Privacy Settings
                 </Button>
-
                 <Button variant="outline" className="w-full justify-start">
                   Help & Support
                 </Button>
