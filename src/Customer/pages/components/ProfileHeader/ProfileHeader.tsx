@@ -39,10 +39,10 @@ import { Link } from "react-router-dom";
 
 interface ProfileHeaderProps {
   content: React.ReactNode;
-  profilePic?: string;
+  profile_image?: string;
 }
 
-const ProfileHeader = ({ content, profilePic }: ProfileHeaderProps) => {
+const ProfileHeader = ({ content, profile_image }: ProfileHeaderProps) => { 
   return (
     <header className="flex justify-between items-center p-4">
       {content}
@@ -54,9 +54,9 @@ const ProfileHeader = ({ content, profilePic }: ProfileHeaderProps) => {
           <Bell className="h-6 w-6 border rounded p-1" />
         </Link>
 
-        {profilePic && (
+        {profile_image && (
           <Avatar className="h-10 w-10">
-            <AvatarImage src={profilePic} alt="Profile picture" />
+            <AvatarImage src={profile_image} alt="Profile picture" />
             <AvatarFallback>User</AvatarFallback>
           </Avatar>
         )}
