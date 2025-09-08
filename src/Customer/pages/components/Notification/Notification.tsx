@@ -207,7 +207,7 @@ const Notifications: React.FC = () => {
                 )}
               </div>
             }
-            profilePic="#"
+            profile_image="#"
           />
         </div>
         {/* Content */}
