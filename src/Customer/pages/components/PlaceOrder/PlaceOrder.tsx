@@ -97,6 +97,7 @@ export default function PlaceOrderPage() {
           const mappedVehicles = vehicles.map((v) => ({
             id: v.id,
             name: v.name,
+            description: v.description || "No description",
             price: typeof v.price === 'string' ? parseFloat(v.price) : v.price, // Handle string prices
             image: vehicleImageByName(v.name),
           }));
