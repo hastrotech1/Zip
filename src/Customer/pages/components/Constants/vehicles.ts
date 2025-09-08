@@ -22,6 +22,22 @@ export interface BackendVehicle {
   price: number;
 }
 
+export async function seedVehiclesIfEmpty() {
+  try {
+    const vehicles = await getVehicles();
+
+    if (!vehicles || vehicles.length === 0) {
+      console.log("Seeding backend with default vehicles...");
+      for (const v of vehicleData) {
+        await vehicle(v.name, v.price); // POST each vehicle
+      }
+    }
+  } catch (err) {
+    console.error("Vehicle seeding failed:", err);
+  }
+}
+
+
 
 export async function vehicle(name: string, price: number) {
   const token = localStorage.getItem("accessToken");

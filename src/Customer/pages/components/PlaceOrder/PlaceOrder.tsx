@@ -87,36 +87,41 @@ export default function PlaceOrderPage() {
   };
 
     useEffect(() => {
-    const loadVehicles = async () => {
-      try {
-        console.log("Loading vehicles from backend...");
-        const vehicles = await getVehicles();
-        console.log("Raw vehicles data:", vehicles);
-        
-        if (vehicles && vehicles.length > 0) {
-          const mappedVehicles = vehicles.map((v) => ({
-            id: v.id,
-            name: v.name,
-            description: v.description || "No description",
-            price: typeof v.price === 'string' ? parseFloat(v.price) : v.price, // Handle string prices
-            image: vehicleImageByName(v.name),
-          }));
-          
-          console.log("Mapped vehicles:", mappedVehicles);
-          setBackendVehicles(mappedVehicles);
-        } else {
-          console.log("No vehicles returned from backend, using defaults");
-          setBackendVehicles(vehicleData);
-        }
-      } catch (error) {
-        console.error("Failed to fetch vehicles:", error);
-        toast.error("Failed to load vehicles, using defaults");
-        setBackendVehicles(vehicleData); // Fallback to default vehicles
-      }
-    };
+  const loadVehicles = async () => {
+    try {
+      console.log("Loading vehicles from backend...");
 
-    loadVehicles();
-  }, []);
+      // Ensure DB has defaults
+      await seedVehiclesIfEmpty();
+
+      const vehicles = await getVehicles();
+      console.log("Raw vehicles data:", vehicles);
+
+      if (vehicles && vehicles.length > 0) {
+        const mappedVehicles = vehicles.map((v) => ({
+          id: v.id,
+          name: v.name,
+          description: v.description || "No description",
+          price: typeof v.price === "string" ? parseFloat(v.price) : v.price,
+          image: vehicleImageByName(v.name),
+        }));
+
+        console.log("Mapped vehicles:", mappedVehicles);
+        setBackendVehicles(mappedVehicles);
+      } else {
+        console.log("No vehicles returned from backend, using defaults");
+        setBackendVehicles(vehicleData);
+      }
+    } catch (error) {
+      console.error("Failed to fetch vehicles:", error);
+      toast.error("Failed to load vehicles, using defaults");
+      setBackendVehicles(vehicleData);
+    }
+  };
+
+  loadVehicles();
+}, []);
+
 
   // Find drivers
   const onFindDrivers = async () => {
@@ -148,6 +153,8 @@ export default function PlaceOrderPage() {
   };
   
 
+  const userPhone = localStorage.getItem("user_phone") || ""; // Get user's phone number
+
   const handleZipIt = async () => {
     if (!pickupText || !dropoffText || !fare) return;
 
@@ -165,13 +172,13 @@ export default function PlaceOrderPage() {
     handlePaystackPayment({
       fare,
       user_mail,
-      receiverPhone,
+      receiverPhone: receiverSelf ? userPhone : receiverPhone, // <-- use userPhone if receiverSelf
       onSuccess: async () => {
         try {
           const shipment = await createShipment({
             pickup_location: pickupText,
             delivery_location: dropoffText,
-            receiver_phone: receiverSelf ? "" : receiverPhone,
+            receiver_phone: receiverSelf ? userPhone : receiverPhone, // <-- use userPhone if receiverSelf
             estimate_fee: fare,
             selected_vehicle: selectedVehicleObj.id,
           });
