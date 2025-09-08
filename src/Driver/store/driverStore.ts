@@ -171,13 +171,19 @@ export const useDriverStore = create<DriverStore>((set, get) => ({
   },
 
   acceptDelivery: async (deliveryId: string) => {
-    const token = localStorage.getItem("accessToken");
-    await axios.post(
-      `https://ziplugs.geniusexcel.tech/api/driver-delivery-management/${deliveryId}/accept`,
-      {},
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-    // ...refreshes deliveries...
+    try {
+      const token = localStorage.getItem("accessToken");
+      await axios.put(
+        `https://ziplugs.geniusexcel.tech/api/driver-delivery-management/${deliveryId}`,
+        { status: "accepted" },
+        { headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" } }
+      );
+      
+      await get().fetchMyDeliveries();
+    } catch (err) {
+      console.error("Failed to accept delivery", err);
+      throw err;
+    }
   },
 
   updateDeliveryStatus: async (deliveryId: string, status) => {
@@ -195,14 +201,21 @@ export const useDriverStore = create<DriverStore>((set, get) => ({
   },
 
   completeDelivery: async (deliveryId: string) => {
-    const token = localStorage.getItem("accessToken");
-    await axios.post(
-      `https://ziplugs.geniusexcel.tech/api/driver-delivery-management/${deliveryId}/complete`,
-      {},
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
-    await get().fetchMyDeliveries();
+    try {
+      const token = localStorage.getItem("accessToken");
+      await axios.put(
+        `https://ziplugs.geniusexcel.tech/api/driver-delivery-management/${deliveryId}`,
+        { status: "completed" },
+        { headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" } }
+      );
+      await get().fetchMyDeliveries();
+    } catch (err) {
+      console.error("Failed to complete delivery", err);
+      throw err;
+    }
   },
 
-  setCurrentDelivery: (delivery) => set({ currentDelivery: delivery }),
+  setCurrentDelivery: (delivery: NormalizedDelivery) => {
+    set({ currentDelivery: delivery });
+  }
 }));
