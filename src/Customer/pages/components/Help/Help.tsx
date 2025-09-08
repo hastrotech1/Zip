@@ -100,7 +100,7 @@ const Help = () => {
                 Help
               </div>
             }
-            profilePic="#"
+            profile_image="#"
           />
         </div>
 
