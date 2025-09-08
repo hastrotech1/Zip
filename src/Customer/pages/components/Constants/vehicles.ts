@@ -103,6 +103,8 @@ import sienna from "../../../../assets/sienna.png";
 import truck from "../../../../assets/truck.png";
 import korope from "../../../../assets/minitruck.png";
 
+export const MAPBOX_TOKEN = "pk.eyJ1IjoiaGFzdHJvLXRlY2giLCJhIjoiY203bXdkN3hpMGp3bjJrc2RtdW1odTJjbyJ9.YnSynYzhxYvs_XHa0j2QyA";
+
 
 export const vehicleData: Vehicle[] = [
   { id: "default-1", name: "Korope", price: 5_000, image: korope, description: "small bus" },
