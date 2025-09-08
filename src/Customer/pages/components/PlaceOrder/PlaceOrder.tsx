@@ -22,6 +22,7 @@ import { handlePaystackPayment } from "../Services/paymentService";
 import { fetchNearbyDrivers, selectDriverForOrder } from "../Services/driversServices";
 import { useMapbox } from "../../../../hooks/useMapbox";
 import MobileMenu from "../MobileHeader/MobileHeader";
+import { seedVehiclesIfEmpty } from "../Constants/vehicles";
 
 /* ----------------------------------------------------------------- */
 /* MAIN COMPONENT -------------------------------------------------- */
