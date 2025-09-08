@@ -22,7 +22,7 @@ export const useMapbox = (
     const map = new mapboxgl.Map({
       container: mapWrap.current,
       style: "mapbox://styles/mapbox/streets-v11",
-      center: [3.3792, 6.5244],
+      center: [3.3792, 6.5244], // Lagos default
       zoom: 12,
     });
     mapRef.current = map;
@@ -42,7 +42,7 @@ export const useMapbox = (
     });
   }, [pickup, onLocationUpdate]);
 
-  // Draw markers and route
+  // Draw markers and driving route
   const drawMarkersAndLine = useCallback(() => {
     if (!mapRef.current) return;
 
@@ -50,48 +50,70 @@ export const useMapbox = (
     pickupMk.current?.remove();
     dropMk.current?.remove();
 
+    // Add pickup marker
     if (pickup) {
       pickupMk.current = new mapboxgl.Marker({ color: "#22c55e" })
         .setLngLat([pickup.lng, pickup.lat])
         .addTo(map);
     }
+
+    // Add dropoff marker
     if (dropoff) {
       dropMk.current = new mapboxgl.Marker({ color: "#ef4444" })
         .setLngLat([dropoff.lng, dropoff.lat])
         .addTo(map);
     }
 
+    // Fetch and draw driving route
     if (pickup && dropoff) {
-      const geojson = {
-        type: "Feature" as const,
-        geometry: {
-          type: "LineString" as const,
-          coordinates: [
-            [pickup.lng, pickup.lat],
-            [dropoff.lng, dropoff.lat],
-          ],
-        },
-        properties: {},
-      };
+      const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${pickup.lng},${pickup.lat};${dropoff.lng},${dropoff.lat}?geometries=geojson&access_token=${mapboxgl.accessToken}`;
 
-      if (map.getSource("route")) map.removeLayer("route");
-      if (map.getSource("route")) map.removeSource("route");
+      fetch(url)
+        .then((res) => res.json())
+        .then((data) => {
+          if (!data.routes || !data.routes[0]) return;
 
-      map.addSource("route", { type: "geojson", data: geojson });
-      map.addLayer({
-        id: "route",
-        type: "line",
-        source: "route",
-        paint: {
-          "line-color": "#3b82f6",
-          "line-width": 4,
-        },
-      });
+          const route = data.routes[0].geometry;
 
-      const b = new mapboxgl.LngLatBounds();
-      b.extend([pickup.lng, pickup.lat]);
-      b.extend([dropoff.lng, dropoff.lat]);
-      map.fitBounds(b, { padding: 60 });
+          if (map.getSource("route")) {
+            (map.getSource("route") as mapboxgl.GeoJSONSource).setData({
+              type: "Feature",
+              geometry: route,
+              properties: {},
+            });
+          } else {
+            map.addSource("route", {
+              type: "geojson",
+              data: {
+                type: "Feature",
+                geometry: route,
+                properties: {},
+              },
+            });
+
+            map.addLayer({
+              id: "route",
+              type: "line",
+              source: "route",
+              layout: {
+                "line-join": "round",
+                "line-cap": "round",
+              },
+              paint: {
+                "line-color": "#3b82f6",
+                "line-width": 4,
+              },
+            });
+          }
+
+          // Fit map to full route
+          const b = new mapboxgl.LngLatBounds();
+          route.coordinates.forEach(([lng, lat]: [number, number]) =>
+            b.extend([lng, lat])
+          );
+          map.fitBounds(b, { padding: 60 });
+        })
+        .catch((err) => console.error("Error fetching directions:", err));
     }
   }, [pickup, dropoff]);
 

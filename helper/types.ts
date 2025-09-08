@@ -25,7 +25,7 @@ export interface Driver {
   distance_km: number;
   rating: number;
   profile_image: string;
-  phone: string;
+  phone_number: string;
 }
 
 

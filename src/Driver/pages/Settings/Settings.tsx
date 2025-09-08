@@ -58,7 +58,7 @@ export const Setting = () => {
                   <div>
                     <div className="font-bold text-lg">{driver?.name}</div>
                     <div className="text-gray-600">{driver?.email}</div>
-                    <div className="text-gray-600">{driver?.phone}</div>
+                    <div className="text-gray-600">{driver?.phone_number}</div>
                     <div className="text-gray-600">
                       Vehicle: {driver?.vehicle?.type} {driver?.vehicle?.model} ({driver?.vehicle?.plateNumber})
                     </div>

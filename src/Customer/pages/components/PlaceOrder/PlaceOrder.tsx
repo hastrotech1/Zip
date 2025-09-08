@@ -50,7 +50,7 @@ export default function PlaceOrderPage() {
 
   const [orderNumber, setOrderNumber] = useState<string | null>(null);
 
-  const { mapWrap } = useMapbox(pickup, dropoff, (location, text) => {
+  const { mapWrap } = useMapbox(pickup, dropoff, (location: Coordinates, text: string) => {
     setPickupText(text);
     setPickup(location);
   });
@@ -471,7 +471,7 @@ function SelectedDriverCard({ d }: { d: Driver }) {
         </div>
       </div>
       <button
-        onClick={() => (window.location.href = `tel:${d.phone}`)}
+        onClick={() => (window.location.href = `tel:${d.phone_number}`)}
         className="inline-flex items-center justify-center w-1/4 py-3 bg-green-600 text-white rounded-xl font-semibold gap-2 mt-4"
       >
         <Phone className="w-4 h-4" />

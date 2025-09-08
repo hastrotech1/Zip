@@ -162,7 +162,7 @@ export const Profile = () => {
                     <div className="flex items-center space-x-4 mt-2 text-sm text-gray-600">
                       <div className="flex items-center space-x-1">
                         <Phone className="w-4 h-4" />
-                        <span>{driver.phone}</span>
+                        <span>{driver.phone_number}</span>
                       </div>
                       <div className="flex items-center space-x-1">
                         <Mail className="w-4 h-4" />

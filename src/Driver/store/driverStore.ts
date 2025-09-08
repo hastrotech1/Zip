@@ -25,7 +25,7 @@ export interface Driver {
   id: string;
   name: string;
   email: string;
-  phone: string;
+  phone_number: string;
   isOnline: boolean;
   profile_image?: string;
   rating: number;
@@ -85,7 +85,7 @@ export const useDriverStore = create<DriverStore>((set, get) => ({
     isOnline: true,
     name: "",
     email: "",
-    phone: "",
+    phone_number: "",
     rating: 0,
     completedDeliveries: 0,
     vehicle: {
