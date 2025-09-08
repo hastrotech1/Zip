@@ -4,9 +4,9 @@ import korope from "../../../../assets/minitruck.png";
 import axios from "axios";
 
 export const vehicleData = [
-  {id: "Small_bus", name: "Korope", price: 5_000, image: korope },
-  { id: "space_bus", name: "Sienna", price: 7_500, image: sienna },
-  {id: "truck", name: "Truck", price: 15_000, image: truck },
+  {id: "", name: "Korope", price: 5_000, image: korope, description: "small bus" },
+  { id: "", name: "Sienna", price: 7_500, image: sienna, description: "medium bus" },
+  {id: "", name: "Truck", price: 15_000, image: truck, description: "truck" },
 ];
 
 export const vehicleImageByName = (name: string) =>
