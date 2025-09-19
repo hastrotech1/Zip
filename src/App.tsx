@@ -4,7 +4,6 @@ import ErrorPage from "./Customer/components/errorPage/ErrorPage";
 import Login from "./Customer/components/Login/Login";
 import Home from "./Customer/components/Home";
 import PlaceOrder from "./Customer/pages/components/PlaceOrder/PlaceOrder";
-import TrackShipment from "./Customer/pages/components/TrackShipment/trackShipment";
 import ResetPassword from "./Customer/pages/components/Reset/ResetPassword";
 import NewPassword from "./Customer/pages/components/Reset/Passwords";
 // import ShipmentDetails from "./Customer/pages/components/PlaceOrder/ShipmentDetails";
@@ -63,7 +62,6 @@ function App() {
         <Route path="/document-upload" element={<DocumentUpload />} />
         <Route path="/payment-details" element={<PaymentDetailsForm />} />
         {/* <Route path="/shipment-details" element={<ShipmentDetails />} /> */}
-        <Route path="/track-shipment" element={<TrackShipment />} />
         <Route path="/help" element={<Help />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/notification" element={<Notifications />} />
