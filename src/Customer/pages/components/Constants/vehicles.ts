@@ -151,10 +151,7 @@ export async function getVehicles(params?: { name?: string; price?: number }): P
       `https://ziplugs.geniusexcel.tech/api/vehicles`,
       {
         headers,
-        // If using query parameters (more standard):
         params,
-        // If your API really needs body parameters for GET (uncommon):
-        // data: params
       }
     );
 
